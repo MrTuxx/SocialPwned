@@ -998,7 +998,7 @@ class InstagramAPI:
         next_max_id = ''
         while 1:
             print("[-] Getting Followers ... ")
-            time.sleep(1)
+            time.sleep(float(0.5))
             self.getUserFollowers(usernameId, next_max_id)
             temp = self.LastJson
 
@@ -1017,7 +1017,7 @@ class InstagramAPI:
         next_max_id = ''
         while 1:
             print("[-] Getting Followings ... ")
-            time.sleep(1)
+            time.sleep(float(0.5))
             self.getUserFollowings(usernameId,next_max_id)
             temp = self.LastJson
 

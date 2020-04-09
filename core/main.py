@@ -11,11 +11,17 @@ def run(args):
     if args.output and not os.path.isfile(args.output):
         print(colors.bad + "The file doesn't exist")
         sys.exit()
+    
+    if args.pwndb:
+        status = os.system('systemctl is-active --quiet tor')
+        if status != 0:
+            print(colors.bad + " Can't connect to service! restart tor service and try again." + colors.end)
+            sys.exit()
 
     api = InstagramAPI(args.user,args.password)
-    print(args)
+    #print(args)
     if (api.login()):
-        print(colors.good + " Login Success!\n")
+        print(colors.good + " Login Success!\n" + colors.end)
         if args.info:
             instagram.getLocationID(api,args.info)
 
@@ -24,36 +30,23 @@ def run(args):
 
         if args.target:
             results = instagram.getUserInformation(api,args.target)
-            if len(results) > 1:
+            if results == False:
                 print(colors.info + " The user has a private profile or doesn't have public email..." + colors.end)
-                if args.followers and not args.followings:
-                    results = instagram.getUserFollowers(api,str(results["user"].get("pk")))
-                if args.followings and not args.followers:
-                    results = instagram.getUserFollowings(api,str(results["user"].get("pk")))
-                if args.followers and args.followings:
-                    followers = instagram.getUserFollowers(api,str(results["user"].get("pk")))
-                    followings =  instagram.getUserFollowings(api,str(results["user"].get("pk")))
-                    results = instagram.sortContacts(followers,followings)
             else:
-                temp = json.loads(results[0])
-                if args.followers and temp.get("private") == "False" and not args.followings:
-                    results = instagram.getUserFollowers(api,str(temp.get("userID")))
-                
-                if args.followings and temp.get("private") == "False" and not args.followers:
-                    results = instagram.getUserFollowings(api,str(temp.get("userID")))
-                if args.followings and args.followers and temp.get("private") == "False":
-                    followers = instagram.getUserFollowers(api,str(temp.get("userID")))
-                    followings =  instagram.getUserFollowings(api,str(temp.get("userID")))
+                if args.followers and not args.followings:
+                    results = instagram.getUserFollowers(api,args.target)
+                if args.followings and not args.followers:
+                    results = instagram.getUserFollowings(api,args.target)
+                if args.followers and args.followings:
+                    followers = instagram.getUserFollowers(api,args.target)
+                    followings =  instagram.getUserFollowings(api,args.target)
                     results = instagram.sortContacts(followers,followings)
-
             
         if args.location:
             results = instagram.getUsersFromLocation(api,args.location)
 
         if args.search_user:
-           temp = instagram.getUsersOfTheSearch(api,args.search_user)
-           if args.pwndb and temp != []:
-               results = instagram.getEmailsFromUsers(api,temp)
+           results = instagram.getUsersOfTheSearch(api,args.search_user)
         
         if args.my_followers and not args.my_followings:
             results = instagram.getMyFollowers(api)
@@ -65,12 +58,13 @@ def run(args):
             followers = instagram.getMyFollowers(api)
             followings = instagram.getMyFollowings(api)
             results = instagram.sortContacts(followers,followings)
-
         if args.output:
             instagram.saveResults(args.output,results)
-        if args.pwndb and len(results) > 0:
+        if args.pwndb and results != [] and results != False:
             juicyInformation = PwnDB.findLeak(results)
-            PwnDB.saveResultsPwnDB(juicyInformation)    
+            PwnDB.saveResultsPwnDB(juicyInformation)
+        elif results == []:
+            print(colors.info + " No emails were found to search." + colors.end)
     else:
-        print(colors.bad + " Can't Login!\n")
+        print(colors.bad + " Can't Login!")
         sys.exit()

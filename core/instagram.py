@@ -15,7 +15,7 @@ def getEmailsFromListOfUsers(api,items):
         user = str(item.get("user").get("username"))
         targets.append(getUserProfile(api,user))
 
-    return getEmailsFromUsers(api,targets)
+    return getEmailsFromUsers(targets)
 
 def getUserProfile(api,username):
 
@@ -28,10 +28,10 @@ def getUserProfile(api,username):
         
         return api.LastJson
 
-def getEmailsFromUsers(api,users):
+def getEmailsFromUsers(users):
 
     targets = []
-    print(colors.info + " Searching users with emails :) \n" + colors.end)
+    print(colors.info + " Searching users with emails :)" + colors.end)
     
     for user in users:
         if str(user["status"]) == "ok":
@@ -62,6 +62,15 @@ def searchEmailInBio(bio):
         if re.match('^[(a-z0-9\_\-\.)]+@[(a-z0-9\_\-\.)]+\.[(a-z)]{2,15}$',word):
             return word
 
+def checkUserVisibility(api,targetID):
+    api.getUserFeed(targetID)
+    if api.LastJson["status"] == "fail":
+        print(colors.bad + " You are not authorized to view this user. " + colors.end)
+        return False
+    else:
+        return True
+    
+
 def getLocationID(api,location):
     
     api.searchLocation(location)
@@ -82,14 +91,16 @@ def getUserInformation(api,target):
     api.searchUsername(str(target))
     info = api.LastJson
     userInfo.append(info)
-    results = getEmailsFromUsers(api,userInfo)
-    if not results == []:
-        return results
+    results = getEmailsFromUsers(userInfo)
+
+    if not checkUserVisibility(api,info["user"].get("pk")) and results == []:
+        return False
     else:
-        return info
+        return results
 
 def getUsersOfTheSearch(api,query):
 
+    print(colors.info + "Searching users..." + colors.end)
     api.searchUsers(query)
     users = api.LastJson["users"]
     results = []
@@ -100,7 +111,7 @@ def getUsersOfTheSearch(api,query):
         userInfo = api.LastJson["user"]
         print(colors.good + " Username: " + colors.W + user.get("username") + colors.B + " User ID: " + colors.W + str(user.get("pk")) + colors.B + " Private: " + colors.W + str(user.get("is_private")) + colors.B + " Followers: " + colors.W + str(userInfo.get("follower_count")) + colors.B + " Following: " + colors.W + str(userInfo.get("following_count")) + colors.end)
     
-    return results
+    return getEmailsFromUsers(results)
 
 def getMyFollowers(api):
     users = api.getTotalSelfFollowers()
@@ -111,14 +122,16 @@ def getMyFollowings(api):
     users = api.getTotalSelfFollowings()
     return getListOfUsers(api,users)
 
-def getUserFollowers(api,userID):
+def getUserFollowers(api,username):
 
-    users = api.getTotalFollowers(userID)
+    user = getUserProfile(api,username)
+    users = api.getTotalFollowers(user["user"].get("pk"))
     return getListOfUsers(api,users)
 
-def getUserFollowings(api,userID):
-    
-    users = api.getTotalFollowings(userID)
+def getUserFollowings(api,username):
+
+    user = getUserProfile(api,username)
+    users = api.getTotalFollowings(user["user"].get("pk"))
     return getListOfUsers(api,users)
 
 def getListOfUsers(api,users):
@@ -128,7 +141,7 @@ def getListOfUsers(api,users):
     for user in users:
         targets.append(getUserProfile(api,user.get("username")))
         
-    return getEmailsFromUsers(api,targets)
+    return getEmailsFromUsers(targets)
 
 def sortContacts(followers,followings):
 
