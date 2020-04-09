@@ -17,11 +17,11 @@ def run(args):
         if status != 0:
             print(colors.bad + " Can't connect to service! restart tor service and try again." + colors.end)
             sys.exit()
-
     api = InstagramAPI(args.user,args.password)
     #print(args)
     if (api.login()):
         print(colors.good + " Login Success!\n" + colors.end)
+        results = ''
         if args.info:
             instagram.getLocationID(api,args.info)
 
@@ -60,6 +60,7 @@ def run(args):
             results = instagram.sortContacts(followers,followings)
         if args.output:
             instagram.saveResults(args.output,results)
+    
         if args.pwndb and results != [] and results != False:
             juicyInformation = PwnDB.findLeak(results)
             PwnDB.saveResultsPwnDB(juicyInformation)
