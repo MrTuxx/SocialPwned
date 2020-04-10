@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 import os, sys, json
 from lib.InstagramAPI import InstagramAPI
+from lib.LinkedInAPI import Linkedin
 from lib.PwnDB import PwnDB
 from core import instagram
 from core.colors import colors
 
-def run(args):
-    
+
+def instagramParameters(args):
+
     if args.output and not os.path.isfile(args.output):
         print(colors.bad + "The file doesn't exist")
         sys.exit()
@@ -69,3 +71,33 @@ def run(args):
     else:
         print(colors.bad + " Can't Login!")
         sys.exit()
+    
+
+def linkedinParameters(args):
+    
+    if args.linkedin:
+        api = Linkedin(args.user, args.password)
+        profile = api.get_profile('')
+        print(profile)
+
+
+        target = api.search_companies("")
+        print(target)
+        print(type(target))
+
+        sys.exit()
+
+def run(args):
+
+    if args.instagram:
+        instagramParameters(args)
+
+    if args.linkedin:
+        linkedinParameters(args)
+    
+
+
+
+
+
+
