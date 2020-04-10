@@ -47,7 +47,9 @@ if __name__ == "__main__":
     ig.add_argument("--delay-ig", required=False, action="store", type=float, default="0.5", help="Set delay (in seconds) to Instagram API requests")
     linkedin = parser.add_argument_group("Linkedin Arguments","Specific arguments for Linkedin")
     linkedin.add_argument("--linkedin", required=False, action="store_true", help="LikedIn")
-    
+    linkedin.add_argument("--company", required=False, action="store", help="Get information about a specific company")
+    linkedin.add_argument("--search-companies", required=False, action="store", help="Search any company")
+    linkedin.add_argument("--employees",required=False,action="store_true",help="Get the employees of a company and contact information")
     args = parser.parse_args()
 
     run(args)

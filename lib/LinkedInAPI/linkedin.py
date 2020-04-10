@@ -1,14 +1,10 @@
 """
 Provides linkedin api-related code
 """
-import random
-import logging
+import random,logging, json
 from time import sleep
 from urllib.parse import urlencode
-import json
-
 from linkedin_api.utils.helpers import get_id_from_urn
-
 from linkedin_api.client import Client
 
 logger = logging.getLogger(__name__)
@@ -19,7 +15,7 @@ def default_evade():
     A catch-all method to try and evade suspension from Linkedin.
     Currenly, just delays the request by a random (bounded) time
     """
-    sleep(random.randint(2, 5))  # sleep a random duration to try and evade suspention
+    sleep(random.randint(1, 3))  # sleep a random duration to try and evade suspention
 
 
 class Linkedin(object):
@@ -375,8 +371,45 @@ class Linkedin(object):
         """
         Return a list of profile ids connected to profile of given [urn_id]
         """
-        return self.search_people(connection_of=urn_id, network_depth="F")
+        #, network_depth="F"
+        return self.search_people(connection_of=urn_id)
 
+
+    def get_current_profile(self):
+        """
+        GET current profile
+        """
+        response = self._fetch(
+            f'/me/', headers={"accept": "application/vnd.linkedin.normalized+json+2.1"})
+        data = response.json()
+
+        profile = {
+            'firstName': data['included'][0]['firstName'],
+            'lastName': data['included'][0]['lastName'],
+            'publicIdentifier': data['included'][0]['publicIdentifier'],
+            'occupation': data['included'][0]['occupation'],
+            'message_id': data['included'][0]['entityUrn'].split(':')[3],
+            'is_premium': data.get('data').get('premiumSubscriber'),
+        }
+
+        try:
+            profile['avatarUrl'] = data['included'][0]['picture']['rootUrl'] + \
+                data['included'][0]['picture']['artifacts'][2]['fileIdentifyingUrlPathSegment']
+        except TypeError:
+            profile['avatarUrl'] = None
+
+        return profile
+    
+    def get_user_profile(self):
+        """"
+        Return current user profile
+        """
+        res = self._fetch(f"/me")
+
+        data = res.json()
+
+        return data
+    
     def get_company_updates(
         self, public_id=None, urn_id=None, max_results=None, results=[]
     ):
@@ -460,7 +493,6 @@ class Linkedin(object):
         res = self._fetch(f"/identity/wvmpCards")
 
         data = res.json()
-
         return data["elements"][0]["value"][
             "com.linkedin.voyager.identity.me.wvmpOverview.WvmpViewersCard"
         ]["insightCards"][0]["value"][
@@ -671,25 +703,24 @@ class Linkedin(object):
 
         return res.status_code == 200
 
-    # def add_connection(self, profile_urn_id):
-    #     payload = {
-    #         "emberEntityName": "growth/invitation/norm-invitation",
-    #         "invitee": {
-    #             "com.linkedin.voyager.growth.invitation.InviteeProfile": {
-    #                 "profileId": profile_urn_id
-    #             }
-    #         },
-    #     }
+    def add_connection(self, profile_urn_id):
+        # payload = {
+        #     "emberEntityName": "growth/invitation/norm-invitation",
+        #     "invitee": {
+        #         "com.linkedin.voyager.growth.invitation.InviteeProfile": {
+        #             "profileId": profile_urn_id
+        #         }
+        #     },
+        # }
+        data = '{"trackingId":"yvzykVorToqcOuvtxjSFMg==","invitations":[],"excludeInvitations":[],"invitee":{"com.linkedin.voyager.growth.invitation.InviteeProfile":{"profileId":' + '"' + profile_urn_id + '"' + '}}}'
+        #print(payload)
 
-    #     print(payload)
-
-    #     res = self._post(
-    #         "/growth/normInvitations",
-    #         data=payload,
-    #         headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
-    #     )
-
-    #     return res.status_code != 201
+        res = self._post(
+            '/growth/normInvitations',
+            data=data,
+            headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
+        )
+        return res.status_code != 201
 
     def remove_connection(self, public_profile_id):
         res = self._post(

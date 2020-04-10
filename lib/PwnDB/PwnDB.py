@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import requests, json, time, random
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from core.colors import colors
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 def haveIBeenPwned(email):
-    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     
     cookies = {
         '__cfduid': 'db69bfd7ae01e4d5d3c3f1e9c8a89bff41585353125',

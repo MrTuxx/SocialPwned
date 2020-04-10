@@ -5,6 +5,7 @@ from lib.InstagramAPI import InstagramAPI
 from lib.LinkedInAPI import Linkedin
 from lib.PwnDB import PwnDB
 from core import instagram
+from core import linkedin
 from core.colors import colors
 
 
@@ -76,16 +77,24 @@ def instagramParameters(args):
 def linkedinParameters(args):
     
     if args.linkedin:
+
         api = Linkedin(args.user, args.password)
-        profile = api.get_profile('')
-        print(profile)
+        
+        results = ''
+        
+        if args.company:
+            linkedin.getCompanyInformation(api,args.company)
 
-
-        target = api.search_companies("")
-        print(target)
-        print(type(target))
-
-        sys.exit()
+        if args.search_companies:
+            companies = linkedin.searchCompanies(api,args.search_companies)
+            if args.employees:
+                results = linkedin.getEmailsFromCompanyEmployees(api,companies)
+        
+        if args.pwndb and results != [] and results != False:
+            juicyInformation = PwnDB.findLeak(results)
+            PwnDB.saveResultsPwnDB(juicyInformation)
+        elif results == []:
+            print(colors.info + " No emails were found to search." + colors.end)
 
 def run(args):
 
