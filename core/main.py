@@ -10,21 +10,11 @@ from core.colors import colors
 
 
 def instagramParameters(args):
-
-    if args.output and not os.path.isfile(args.output):
-        print(colors.bad + "The file doesn't exist")
-        sys.exit()
-    
-    if args.pwndb:
-        status = os.system('systemctl is-active --quiet tor')
-        if status != 0:
-            print(colors.bad + " Can't connect to service! restart tor service and try again." + colors.end)
-            sys.exit()
+    results = ''
     api = InstagramAPI(args.user,args.password)
-    #print(args)
+
     if (api.login()):
         print(colors.good + " Login Success!\n" + colors.end)
-        results = ''
         if args.info:
             instagram.getLocationID(api,args.info)
 
@@ -44,68 +34,81 @@ def instagramParameters(args):
                     followers = instagram.getUserFollowers(api,args.target)
                     followings =  instagram.getUserFollowings(api,args.target)
                     results = instagram.sortContacts(followers,followings)
-            
+              
         if args.location:
             results = instagram.getUsersFromLocation(api,args.location)
 
         if args.search_user:
-           results = instagram.getUsersOfTheSearch(api,args.search_user)
-        
+            results = instagram.getUsersOfTheSearch(api,args.search_user)
+            
         if args.my_followers and not args.my_followings:
             results = instagram.getMyFollowers(api)
-        
+            
         if args.my_followings and not args.my_followers:
             results = instagram.getMyFollowings(api)
-        
+            
         if args.my_followings and args.my_followers:
             followers = instagram.getMyFollowers(api)
             followings = instagram.getMyFollowings(api)
             results = instagram.sortContacts(followers,followings)
         if args.output:
             instagram.saveResults(args.output,results)
-    
-        if args.pwndb and results != [] and results != False:
-            juicyInformation = PwnDB.findLeak(results)
-            PwnDB.saveResultsPwnDB(juicyInformation)
-        elif results == []:
-            print(colors.info + " No emails were found to search." + colors.end)
+        
     else:
         print(colors.bad + " Can't Login!")
         sys.exit()
+
+    return results
     
 
 def linkedinParameters(args):
     
-    if args.linkedin:
+    results = ''
+    api = Linkedin(args.user, args.password)
+    
+    if args.company:
+        linkedin.getCompanyInformation(api,args.company)
+        if args.employees:
+            results = linkedin.getEmailsFromUsers(api,linkedin.getEmployeesFromCurrentCompany(api,args.company))
 
-        api = Linkedin(args.user, args.password)
-        
-        results = ''
-        
-        if args.company:
-            linkedin.getCompanyInformation(api,args.company)
+    if args.search_companies:
+        companies = linkedin.searchCompanies(api,args.search_companies)
+        if args.employees:
+            results = linkedin.getEmailsFromCompanyEmployees(api,companies)
 
-        if args.search_companies:
-            companies = linkedin.searchCompanies(api,args.search_companies)
-            if args.employees:
-                results = linkedin.getEmailsFromCompanyEmployees(api,companies)
+    if args.my_contacts:
+        print(args.my_contacts)
+    
+    return results
         
-        if args.pwndb and results != [] and results != False:
-            juicyInformation = PwnDB.findLeak(results)
-            PwnDB.saveResultsPwnDB(juicyInformation)
-        elif results == []:
-            print(colors.info + " No emails were found to search." + colors.end)
+
 
 def run(args):
 
+    results = []
+
+    if args.output and not os.path.isfile(args.output):
+        print(colors.bad + "The file doesn't exist")
+        sys.exit()
+    
+    if args.pwndb:
+        status = os.system('systemctl is-active --quiet tor')
+        if status != 0:
+            print(colors.bad + " Can't connect to service! restart tor service and try again." + colors.end)
+            sys.exit()
+
     if args.instagram:
-        instagramParameters(args)
+        results = instagramParameters(args)
 
     if args.linkedin:
-        linkedinParameters(args)
+        results = linkedinParameters(args)
     
 
-
+    if args.pwndb and results != [] and results != False:
+        juicyInformation = PwnDB.findLeak(results)
+        PwnDB.saveResultsPwnDB(juicyInformation)
+    elif results == []:
+        print(colors.info + " No emails were found to search." + colors.end)
 
 
 

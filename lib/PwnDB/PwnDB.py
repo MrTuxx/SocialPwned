@@ -47,7 +47,7 @@ def haveIBeenPwned(email):
             date = breache['BreachDate']
             infoAboutLeak.append(json.dumps({'name': name, 'domain': domain, 'date': date}))
     except:
-        infoAboutLeak.append("Sources not found")
+        infoAboutLeak.append(" Sources not found")
     
     return infoAboutLeak
         
@@ -123,7 +123,7 @@ def saveResultsPwnDB(results):
                 haveIBeenPwnedInfo = leak[-1]
                 print("\t\t" + colors.info + " Information found in HaveIBeenPwned from pwned websites" + colors.end)
                 for infoPwned  in haveIBeenPwnedInfo:
-                    print("\t\t" + colors.good + colors.V + infoPwned + colors.end)
+                    print("\t\t" + colors.good + " " + colors.V + infoPwned + colors.end)
                     resultFile.write("\t\t" + infoPwned + "\n")
             else:
                 print(colors.good + " User: " + colors.W + result.get("user") + colors.B + " Email: " + colors.W + result.get("email") + colors.B + " Not Have Leaks in PwnDB" + colors.end)
