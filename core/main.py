@@ -8,6 +8,19 @@ from core import instagram
 from core import linkedin
 from core.colors import colors
 
+def saveResults(file,results):
+    print(colors.info + " Writing the file..." + colors.end)
+    content = ""
+    with open(str(file), "r") as resultFile:
+        content = resultFile.read()
+    resultFile.close()
+    with open(str(file), "a") as resultFile:
+        for result in results:
+            target = json.loads(result)
+            if target['email'] not in content:
+                resultFile.write(target['user']+":"+target['userID']+":"+target['email']+"\n")
+    resultFile.close()
+    print(colors.good + " Correctly saved information..." + colors.end)
 
 def instagramParameters(args):
     results = ''
@@ -50,10 +63,7 @@ def instagramParameters(args):
         if args.my_followings and args.my_followers:
             followers = instagram.getMyFollowers(api)
             followings = instagram.getMyFollowings(api)
-            results = instagram.sortContacts(followers,followings)
-        if args.output:
-            instagram.saveResults(args.output,results)
-        
+            results = instagram.sortContacts(followers,followings)        
     else:
         print(colors.bad + " Can't Login!")
         sys.exit()
@@ -68,21 +78,42 @@ def linkedinParameters(args):
     
     if args.company:
         linkedin.getCompanyInformation(api,args.company)
+        users = []
         if args.employees:
-            results = linkedin.getEmailsFromUsers(api,linkedin.getEmployeesFromCurrentCompany(api,args.company))
+            users = linkedin.getEmployeesFromCurrentCompany(api,args.company)
+            results = linkedin.getEmailsFromUsers(api,users)
+        if args.employees and args.add_contacts:
+            linkedin.sendContactRequestAListOfUsers(api,users)
+
 
     if args.search_companies:
         companies = linkedin.searchCompanies(api,args.search_companies)
+        users = []
         if args.employees:
-            results = linkedin.getEmailsFromCompanyEmployees(api,companies)
+            users = linkedin.getCompanyEmployees(api,companies)
+            results = linkedin.getEmailsFromUsers(api, users)
+        if args.add_contacts and args.add_contacts:
+            linkedin.sendContactRequestAListOfUsers(api,users)
 
     if args.my_contacts:
-        print(args.my_contacts)
+        results = linkedin.getEmailsFromUsers(api,linkedin.getMyContacts(api))
+
+    if args.user_contacts:
+        results = linkedin.getEmailsFromUsers(api,linkedin.getFollowers(api,args.user_contacts))
+
+    if args.search_users:
+        users = linkedin.searchUsers(api,args.search_users)
+        if args.pwndb:
+            results = linkedin.getEmailsFromUsers(api, users)
+        if args.add_contacts:
+            linkedin.sendContactRequestAListOfUsers(api,users)
     
+    if args.add_a_contact:
+        linkedin.sendContactRequest(api,args.add_one_contact)
+
+
     return results
         
-
-
 def run(args):
 
     results = []
@@ -103,6 +134,8 @@ def run(args):
     if args.linkedin:
         results = linkedinParameters(args)
     
+    if args.output:
+        saveResults(args.output,results)
 
     if args.pwndb and results != [] and results != False:
         juicyInformation = PwnDB.findLeak(results)

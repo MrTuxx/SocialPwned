@@ -153,17 +153,5 @@ def sortContacts(followers,followings):
         targets.append(json.dumps({"user":temp.get("user"),"userID":temp.get("userID"),"email":temp.get("email"),"private":temp.get("private")}))
     return list(set(targets))
 
-def saveResults(file,results):
-    print(colors.info + " Writing the file..." + colors.end)
-    content = ""
-    with open(str(file), "r") as resultFile:
-        content = resultFile.read()
-    resultFile.close()
-    with open(str(file), "a") as resultFile:
-        for result in results:
-            target = json.loads(result)
-            if target['email'] not in content:
-                resultFile.write(target['user']+":"+target['userID']+":"+target['email']+"\n")
-    resultFile.close()
-    print(colors.good + " Correctly saved information..." + colors.end)
+    
     

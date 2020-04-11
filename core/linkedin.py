@@ -14,8 +14,7 @@ def getCompanyInformation(api,companyID):
         area = location.get("geographicArea")
         city = location.get("city")
         postalCode = location.get("postalCode")
-        print(colors.good + " Country: " + colors.W + country + colors.B + " Area: " + colors.W + area + colors.B + " City: " + colors.W + city + colors.B + " Postal Code: " + colors.W + postalCode + colors.end )
-    print(getEmployeesFromCurrentCompany(api,companyID))    
+        print(colors.good + " Country: " + colors.W + country + colors.B + " Area: " + colors.W + area + colors.B + " City: " + colors.W + city + colors.B + " Postal Code: " + colors.W + postalCode + colors.end ) 
 
 def getEmployeesFromCurrentCompany(api,companyID):
     return api.search_people(current_company=[str(companyID)])
@@ -40,37 +39,52 @@ def getEmailsFromUsers(api,employees):
             results.append(json.dumps({"user":employeeID,"userID":userID,"email":email}))
     return results
 
-def getEmailsFromCompanyEmployees(api,companies):
+def getCompanyEmployees(api,companies):
     targets = []
     for company in companies:
         nameCompany = company.get("name")
         employees = searchUsersOfCompany(api,nameCompany)
         if employees != [] and employees not in targets:
             targets.append(employees)
+    return unionUsers(targets)
+
+def unionUsers(targets):
     results = []
     for target in targets:
         for result in target:
             results.append(result)
+    print(colors.info + " " + str(len(results)) + " different users have been found in total ^-^" + colors.end)
     return results
 
+def searchUsers(api,query):
+    print(colors.info + " Searching users... :)" + colors.end)
+    items = api.search_people(keywords=query)
+    
+    for item in items:
+        user = item.get("public_id")
+        userID = item.get("urn_id")
+        print(colors.good + " User: " + colors.W + user + colors.B + " userID: " + colors.W + userID + colors.end)
+    print(colors.info + " " + str(len(items)) + " users have been found ^-^" + colors.end)
+    return items
 
 def searchCompanies(api,query):
     print(colors.info + " Searching companies... :)" + colors.end)
     items = api.search_companies(query)
+    
     for item in items:
         nameCompany = item.get("name")
         companyID = item.get("urn_id")
         numberEmployees = str(item.get("subline"))
         print(colors.good + " Name: " + colors.W + nameCompany + colors.B + " company ID: " + colors.W + companyID + colors.B + " Number of employees: " + colors.W + numberEmployees + colors.end)
-    
+    print(colors.info + " " + str(len(items)) + " companies have been found ^-^" + colors.end)
     return items
 
 def searchUsersOfCompany(api,nameCompany):
     print(colors.info + " Searching employees of company: " + nameCompany + colors.end)
     employees = api.search_people(keywords=nameCompany)
-    print(colors.info + " " + str(len(employees)) + " employees have been found ^-^")
+    print(colors.info + " " + str(len(employees)) + " employees have been found ^-^" + colors.end)
     
-    return getEmailsFromUsers(api,employees)
+    return employees
 
 def getContactInformation(api,publicID):
 
@@ -91,25 +105,37 @@ def getContactInformation(api,publicID):
     if info.get("phone_numbers") == []:
         phone = "Not Found"
     else:
-        phone = info.get("phone_numbers")
+        phone = info.get("phone_numbers")[0].get("number")
 
     return {"email":email,"twitter":twitter,"phone":phone}
 
+def sendContactRequestAListOfUsers(api, users):
+
+    for user in users:
+        userID = user.get("urn_id")
+        sendContactRequest(api,userID)
+    
 def sendContactRequest(api, userID):
 
     response = api.add_connection(userID)
-    print(response)
+    if response == 201:
+        print(colors.good + " Contact request successfully" + colors.end)
+    else:
+        print(colors.bad + " Contact request unsuccessfully" + colors.end)
     
+    return response
 
 def getFollowers(api, userID):
-
+    print(colors.info + " Getting contacts..." + colors.end)
     followers = api.get_profile_connections(userID)
+    print(colors.info + " " + str(len(followers)) + " contacts have been found ^-^" + colors.end)
     return followers
 
 def getMyContacts(api):
-    
+    print(colors.info + " Getting your contacts..." + colors.end)
     userID = getMyUserID(api)
     followers = getFollowers(api,userID)
+    print(colors.info + " " + str(len(followers)) + " contacts have been found ^-^" + colors.end)
     return followers
 
 

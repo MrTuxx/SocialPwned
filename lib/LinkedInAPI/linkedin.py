@@ -400,16 +400,6 @@ class Linkedin(object):
 
         return profile
     
-    def get_user_profile(self):
-        """"
-        Return current user profile
-        """
-        res = self._fetch(f"/me")
-
-        data = res.json()
-
-        return data
-    
     def get_company_updates(
         self, public_id=None, urn_id=None, max_results=None, results=[]
     ):
@@ -720,7 +710,7 @@ class Linkedin(object):
             data=data,
             headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
         )
-        return res.status_code != 201
+        return res.status_code
 
     def remove_connection(self, public_profile_id):
         res = self._post(

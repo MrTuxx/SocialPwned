@@ -51,9 +51,11 @@ if __name__ == "__main__":
     linkedin.add_argument("--search-companies", required=False, action="store", help="Search any company.\nYou can also search for a specific company by entering the exact name")
     linkedin.add_argument("--employees",required=False,action="store_true",help="Get the employees of a company and contact information.\nIf you combine it with the flag --search-companies you get the current and past employees\nand if you combine it with the flag --company you get only the current employees")
     linkedin.add_argument("--my-contacts",required=False,action="store_true",help="Display my contacts and their contact information")
-    linkedin.add_argument("--user-contacts",required=False,action="store_true",help="Display contacts from a specific user ID and their contact information")
-    linkedin.add_argument("--add-contacts",required=False,action="store_true",help="")
-    linkedin.add_argument("--search-users",required=False,action="store_true",help="")
+    linkedin.add_argument("--user-contacts",required=False,action="store",help="Display contacts from a specific user ID and their contact information")
+    linkedin.add_argument("--search-users",required=False,action="store",help="Search any user")
+    linkedin.add_argument("--add-contacts",required=False,action="store_true",help="Send contact request for all users")
+    linkedin.add_argument("--add-a-contact",required=False,action="store",help="Send contact request for a single user with his userID")
+    
     args = parser.parse_args()
 
     run(args)
