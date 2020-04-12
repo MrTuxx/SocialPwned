@@ -1,11 +1,14 @@
 """
 Provides linkedin api-related code
 """
-import random,logging, json
+import random, json, logging
 from time import sleep
 from urllib.parse import urlencode
 from linkedin_api.utils.helpers import get_id_from_urn
 from linkedin_api.client import Client
+logging.getLogger("requests").setLevel(logging.INFO)
+logging.getLogger("requests").setLevel(logging.DEBUG)
+logging.getLogger("requests").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 

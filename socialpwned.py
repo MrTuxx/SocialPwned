@@ -7,10 +7,10 @@ from core.main import run
 if __name__ == "__main__":
 
     footed_description = """
-    Usage examples:
-        
-        + Getting information about locations:
-            python3 %(name)s --user user --password password --info Madrid
+    Usage examples:\n
+        \n
+        + Getting information about locations:\n
+        \tpython3 %(name)s --user user --password password --info Madrid\n
         + Getting
         +
         +
@@ -19,13 +19,8 @@ if __name__ == "__main__":
         +
 
     """%dict(name="socialpwned.py")
-    global_arguments = """
 
-    Global arguments:
-
-    """
-    
-    parser = argparse.ArgumentParser(description="Social Pwned",prog='socialpwned.py',epilog=footed_description,formatter_class=argparse.RawTextHelpFormatter)
+    parser = argparse.ArgumentParser(description="Social Pwned",prog='socialpwned.py',epilog=footed_description,formatter_class=lambda prog: argparse.HelpFormatter(prog,max_help_position=40))
     general = parser.add_argument_group("General Arguments","General arguments")
     general.add_argument("--user", required=True, action="store", help="If you use instagram you must enter the username. If you use LinkedIn you must enter the email.")
     general.add_argument("--password", required=True, action="store", help="Password")
@@ -47,9 +42,9 @@ if __name__ == "__main__":
     ig.add_argument("--delay-ig", required=False, action="store", type=float, default="0.5", help="Set delay (in seconds) to Instagram API requests")
     linkedin = parser.add_argument_group("Linkedin Arguments","Specific arguments for Linkedin")
     linkedin.add_argument("--linkedin", required=False, action="store_true", help="LikedIn")
-    linkedin.add_argument("--company", required=False, action="store", help="Get information about a specific company from company ID", dest="company")
+    linkedin.add_argument("--company", required=False, action="store", help="Get information about a specific company from company ID")
     linkedin.add_argument("--search-companies", required=False, action="store", help="Search any company.\nYou can also search for a specific company by entering the exact name")
-    linkedin.add_argument("--employees",required=False,action="store_true",help="Get the employees of a company and contact information.\nIf you combine it with the flag --search-companies you get the current and past employees\nand if you combine it with the flag --company you get only the current employees")
+    linkedin.add_argument("--employees",required=False,action="store_true",help="Get the employees of a company and contact information. If you combine it with the flag --search-companies you get the current and past employees and if you combine it with the flag --company you get only the current employees")
     linkedin.add_argument("--my-contacts",required=False,action="store_true",help="Display my contacts and their contact information")
     linkedin.add_argument("--user-contacts",required=False,action="store",help="Display contacts from a specific user ID and their contact information")
     linkedin.add_argument("--search-users",required=False,action="store",help="Search any user")
