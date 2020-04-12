@@ -1,0 +1,14 @@
+{
+    "instagram":{
+        "username":"user",
+        "password":"password"
+    },
+    "linkedin":{
+        "email":"email",
+        "password":"password"
+    },
+    "twitter":{
+        "username":"username",
+        "password":"password"
+    }
+}

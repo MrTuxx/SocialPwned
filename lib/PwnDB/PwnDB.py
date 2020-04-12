@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import requests, json, time, random
+import requests, json, time, random, sys
 from core.colors import colors
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -98,7 +98,12 @@ def findLeak(emails):
 
         request_data = {'luser': username, 'domain': domain, 'luseropr': 1, 'domainopr': 1, 'submitform': 'em'}
         time.sleep(1)
-        response = session.post(url, data=request_data)
+        try:
+            response = session.post(url, data=request_data)
+        except Exception as e:
+            print(colors.bad + " Can't connect to service! restart tor service and try again." + colors.end)
+            print(e)
+            sys.exit()
         print(colors.info + " Searching: " + mail + colors.end)
         if response.status_code == 200:
             target = {'user': userInstagram, 'userID': userID, 'email': mail, 'leak': parsePwndbResponse(mail,response.text)}

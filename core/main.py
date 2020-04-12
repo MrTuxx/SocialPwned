@@ -22,9 +22,22 @@ def saveResults(file,results):
     resultFile.close()
     print(colors.good + " Correctly saved information..." + colors.end)
 
-def instagramParameters(args):
-    results = ''
-    api = InstagramAPI(args.user,args.password)
+
+def readCredentials(credentialsFile):
+    try:
+        data = []
+        with open(credentialsFile) as json_file:
+            data = json.load(json_file)
+        json_file.close()
+    except Exception as e:
+        print(colors.bad + " Incorrect JSON format" + colors.end)
+        sys.exit()
+
+    return data
+
+def instagramParameters(args,ig_username,ig_password):
+    results = []
+    api = InstagramAPI(ig_username,ig_password)
 
     if (api.login()):
         print(colors.good + " Login Success!\n" + colors.end)
@@ -65,61 +78,70 @@ def instagramParameters(args):
             followings = instagram.getMyFollowings(api)
             results = instagram.sortContacts(followers,followings)        
     else:
-        print(colors.bad + " Can't Login!")
-        sys.exit()
+        print(colors.bad + " Can't Login to Instagram!" + colors.end)
+        #sys.exit()
 
     return results
     
 
-def linkedinParameters(args):
+def linkedinParameters(args,in_email,in_password):
     
-    results = ''
-    api = Linkedin(args.user, args.password)
-    
-    if args.company:
-        linkedin.getCompanyInformation(api,args.company)
-        users = []
-        if args.employees:
-            users = linkedin.getEmployeesFromCurrentCompany(api,args.company)
-            results = linkedin.getEmailsFromUsers(api,users)
-        if args.employees and args.add_contacts:
-            linkedin.sendContactRequestAListOfUsers(api,users)
+    results = []
+    api = Linkedin(in_email, in_password)
+    if api.__dict__.get("success"):
+
+        if args.company:
+            linkedin.getCompanyInformation(api,args.company)
+            users = []
+            if args.employees:
+                users = linkedin.getEmployeesFromCurrentCompany(api,args.company)
+                results = linkedin.getEmailsFromUsers(api,users)
+            if args.employees and args.add_contacts:
+                linkedin.sendContactRequestAListOfUsers(api,users)
 
 
-    if args.search_companies:
-        companies = linkedin.searchCompanies(api,args.search_companies)
-        users = []
-        if args.employees:
-            users = linkedin.getCompanyEmployees(api,companies)
-            results = linkedin.getEmailsFromUsers(api, users)
-        if args.add_contacts and args.add_contacts:
-            linkedin.sendContactRequestAListOfUsers(api,users)
+        if args.search_companies:
+            companies = linkedin.searchCompanies(api,args.search_companies)
+            users = []
+            if args.employees:
+                users = linkedin.getCompanyEmployees(api,companies)
+                results = linkedin.getEmailsFromUsers(api, users)
+            if args.add_contacts and args.add_contacts:
+                linkedin.sendContactRequestAListOfUsers(api,users)
 
-    if args.my_contacts:
-        results = linkedin.getEmailsFromUsers(api,linkedin.getMyContacts(api))
+        if args.my_contacts:
+            results = linkedin.getEmailsFromUsers(api,linkedin.getMyContacts(api))
 
-    if args.user_contacts:
-        results = linkedin.getEmailsFromUsers(api,linkedin.getFollowers(api,args.user_contacts))
+        if args.user_contacts:
+            results = linkedin.getEmailsFromUsers(api,linkedin.getFollowers(api,args.user_contacts))
 
-    if args.search_users:
-        users = linkedin.searchUsers(api,args.search_users)
-        if args.pwndb:
-            results = linkedin.getEmailsFromUsers(api, users)
-        if args.add_contacts:
-            linkedin.sendContactRequestAListOfUsers(api,users)
-    
-    if args.add_a_contact:
-        linkedin.sendContactRequest(api,args.add_one_contact)
+        if args.search_users:
+            users = linkedin.searchUsers(api,args.search_users)
+            if args.pwndb:
+                results = linkedin.getEmailsFromUsers(api, users)
+            if args.add_contacts:
+                linkedin.sendContactRequestAListOfUsers(api,users)
+        
+        if args.add_a_contact:
+            linkedin.sendContactRequest(api,args.add_one_contact)
 
+    else:
+        print(colors.bad + " Can't Login to linkedin!" + colors.end)      
 
     return results
         
 def run(args):
 
     results = []
+    creds = ''
+    if args.credentials and os.path.isfile(args.credentials) and os.access(args.credentials, os.R_OK):
+        creds = readCredentials(args.credentials)
+    else:
+        print(colors.bad + " The file can't be accessed" + colors.end)
+        sys.exit()
 
     if args.output and not os.path.isfile(args.output):
-        print(colors.bad + "The file doesn't exist")
+        print(colors.bad + " The file doesn't exist" + colors.end)
         sys.exit()
     
     if args.pwndb:
@@ -129,10 +151,14 @@ def run(args):
             sys.exit()
 
     if args.instagram:
-        results = instagramParameters(args)
+        ig_username = creds.get("instagram").get("username")
+        ig_password = creds.get("instagram").get("password")
+        results = instagramParameters(args,ig_username,ig_password)
 
     if args.linkedin:
-        results = linkedinParameters(args)
+        in_email = creds.get("linkedin").get("email")
+        in_password = creds.get("linkedin").get("password")
+        results = linkedinParameters(args,in_email,in_password)
     
     if args.output:
         saveResults(args.output,results)

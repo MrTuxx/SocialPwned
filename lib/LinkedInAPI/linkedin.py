@@ -6,6 +6,7 @@ from time import sleep
 from urllib.parse import urlencode
 from linkedin_api.utils.helpers import get_id_from_urn
 from linkedin_api.client import Client
+from core.colors import colors
 logging.getLogger("requests").setLevel(logging.INFO)
 logging.getLogger("requests").setLevel(logging.DEBUG)
 logging.getLogger("requests").setLevel(logging.WARNING)
@@ -47,9 +48,15 @@ class Linkedin(object):
         )
         logging.basicConfig(level=logging.DEBUG if debug else logging.INFO)
         self.logger = logger
+        self.success = False
+        try:
+            if authenticate:
+                self.client.authenticate(username, password)
+                self.success = True
+        except Exception as e:
+            self.success = False
+            print(colors.bad + " Linkedin: " + str(e) + colors.end)
 
-        if authenticate:
-            self.client.authenticate(username, password)
 
     def _fetch(self, uri, evade=default_evade, **kwargs):
         """
