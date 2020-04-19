@@ -1,6 +1,6 @@
 import requests
 import logging
-from linkedin_api.cookie_repository import CookieRepository
+from .cookie_repository import CookieRepository
 logging.getLogger("requests").setLevel(logging.INFO)
 logging.getLogger("requests").setLevel(logging.DEBUG)
 logging.getLogger("requests").setLevel(logging.WARNING)

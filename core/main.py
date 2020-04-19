@@ -20,7 +20,7 @@ def saveResults(file,results):
             if target['email'] not in content:
                 resultFile.write(target['user']+":"+target['userID']+":"+target['email']+"\n")
     resultFile.close()
-    print(colors.good + " Correctly saved information..." + colors.end)
+    print(colors.good + " Correctly saved information...\n" + colors.end)
 
 
 def readCredentials(credentialsFile):
@@ -45,38 +45,39 @@ def instagramParameters(args,ig_username,ig_password):
             instagram.getLocationID(api,args.info)
 
         if args.hashtag:
-            results = instagram.getUsersFromAHashTag(api,args.hashtag)
+            results.extend(instagram.getUsersFromAHashTag(api,args.hashtag))
 
         if args.target:
-            results = instagram.getUserInformation(api,args.target)
-            if results == False:
+            temp = instagram.getUserInformation(api,args.target)
+            if temp == False:
                 print(colors.info + " The user has a private profile or doesn't have public email..." + colors.end)
             else:
+                results.extend(temp)
                 if args.followers and not args.followings:
-                    results = instagram.getUserFollowers(api,args.target)
+                    results.extend(instagram.getUserFollowers(api,args.target))
                 if args.followings and not args.followers:
-                    results = instagram.getUserFollowings(api,args.target)
+                    results.extend(instagram.getUserFollowings(api,args.target))
                 if args.followers and args.followings:
                     followers = instagram.getUserFollowers(api,args.target)
                     followings =  instagram.getUserFollowings(api,args.target)
-                    results = instagram.sortContacts(followers,followings)
+                    results.extend(instagram.sortContacts(followers,followings))
               
         if args.location:
-            results = instagram.getUsersFromLocation(api,args.location)
+            results.extend(instagram.getUsersFromLocation(api,args.location))
 
         if args.search_user:
-            results = instagram.getUsersOfTheSearch(api,args.search_user)
+            results.extend(instagram.getUsersOfTheSearch(api,args.search_user))
             
         if args.my_followers and not args.my_followings:
-            results = instagram.getMyFollowers(api)
+            results.extend(instagram.getMyFollowers(api))
             
         if args.my_followings and not args.my_followers:
-            results = instagram.getMyFollowings(api)
+            results.extend(instagram.getMyFollowings(api))
             
         if args.my_followings and args.my_followers:
             followers = instagram.getMyFollowers(api)
             followings = instagram.getMyFollowings(api)
-            results = instagram.sortContacts(followers,followings)        
+            results.extend(instagram.sortContacts(followers,followings))  
     else:
         print(colors.bad + " Can't Login to Instagram!" + colors.end)
         #sys.exit()
@@ -95,7 +96,7 @@ def linkedinParameters(args,in_email,in_password):
             users = []
             if args.employees:
                 users = linkedin.getEmployeesFromCurrentCompany(api,args.company)
-                results = linkedin.getEmailsFromUsers(api,users)
+                results.extend(linkedin.getEmailsFromUsers(api,users))
             if args.employees and args.add_contacts:
                 linkedin.sendContactRequestAListOfUsers(api,users)
 
@@ -105,20 +106,20 @@ def linkedinParameters(args,in_email,in_password):
             users = []
             if args.employees:
                 users = linkedin.getCompanyEmployees(api,companies)
-                results = linkedin.getEmailsFromUsers(api, users)
+                results.extend(linkedin.getEmailsFromUsers(api, users))
             if args.add_contacts and args.add_contacts:
                 linkedin.sendContactRequestAListOfUsers(api,users)
 
         if args.my_contacts:
-            results = linkedin.getEmailsFromUsers(api,linkedin.getMyContacts(api))
+            results.extend(linkedin.getEmailsFromUsers(api,linkedin.getMyContacts(api)))
 
         if args.user_contacts:
-            results = linkedin.getEmailsFromUsers(api,linkedin.getFollowers(api,args.user_contacts))
+            results.extend(linkedin.getEmailsFromUsers(api,linkedin.getFollowers(api,args.user_contacts)))
 
         if args.search_users:
             users = linkedin.searchUsers(api,args.search_users)
             if args.pwndb:
-                results = linkedin.getEmailsFromUsers(api, users)
+                results.extend(linkedin.getEmailsFromUsers(api, users))
             if args.add_contacts:
                 linkedin.sendContactRequestAListOfUsers(api,users)
         
@@ -153,12 +154,12 @@ def run(args):
     if args.instagram:
         ig_username = creds.get("instagram").get("username")
         ig_password = creds.get("instagram").get("password")
-        results = instagramParameters(args,ig_username,ig_password)
+        results.extend(instagramParameters(args,ig_username,ig_password))
 
     if args.linkedin:
         in_email = creds.get("linkedin").get("email")
         in_password = creds.get("linkedin").get("password")
-        results = linkedinParameters(args,in_email,in_password)
+        results.extend(linkedinParameters(args,in_email,in_password))
     
     if args.output:
         saveResults(args.output,results)

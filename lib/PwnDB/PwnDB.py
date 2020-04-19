@@ -78,10 +78,17 @@ def parsePwndbResponse(mail,text):
 
     return emails
 
+<<<<<<< HEAD
 session = requests.session()
 session.proxies = {'http': 'socks5://127.0.0.1:9050', 'https': 'socks5://127.0.0.1:9050'}
 
 def findLeak(emails):
+=======
+def findLeak(emails,tor_proxy):
+    
+    session = requests.session()
+    session.proxies = {'http': 'socks5://{}'.format(tor_proxy), 'https': 'socks5://{}'.format(tor_proxy)}
+>>>>>>> b41ef74... LinkedIn API and Twint
 
     url = "http://pwndb2am4tzkvold.onion/"
     leaks = []
@@ -110,7 +117,13 @@ def findLeak(emails):
             leaks.append(target)
             print(colors.good + " The request was successful" + colors.end)
         else:
+<<<<<<< HEAD
             print(colors.bad + " The request was not successful for the user: " + colors.W + userInstagram + colors.R + "and email: " + colors.W + email + colors.R + ". Maybe you should increase the delay" + colors.end)
+=======
+            print(response.status_code)
+            print(response.text)
+            print(colors.bad + " The request was not successful for the user: " + colors.W + user + colors.R + " and email: " + colors.W + mail + colors.R + ". Maybe you should increase the delay" + colors.end)
+>>>>>>> b41ef74... LinkedIn API and Twint
 
     return leaks
 

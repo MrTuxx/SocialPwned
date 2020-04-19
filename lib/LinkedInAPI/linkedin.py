@@ -4,8 +4,8 @@ Provides linkedin api-related code
 import random, json, logging
 from time import sleep
 from urllib.parse import urlencode
-from linkedin_api.utils.helpers import get_id_from_urn
-from linkedin_api.client import Client
+from .utils.helpers import get_id_from_urn
+from .client import Client
 from core.colors import colors
 logging.getLogger("requests").setLevel(logging.INFO)
 logging.getLogger("requests").setLevel(logging.DEBUG)
