@@ -47,8 +47,12 @@ if __name__ == "__main__":
     linkedin.add_argument("--my-contacts",required=False,action="store_true",help="Display my contacts and their contact information")
     linkedin.add_argument("--user-contacts",required=False,action="store",help="Display contacts from a specific user ID and their contact information",metavar="user_id")
     linkedin.add_argument("--search-users",required=False,action="store",help="Search any user",metavar="query")
+    linkedin.add_argument("--target-in",required=False,action="store",help="")
     linkedin.add_argument("--add-contacts",required=False,action="store_true",help="Send contact request for all users")
     linkedin.add_argument("--add-a-contact",required=False,action="store",help="Send contact request for a single user with his user ID",metavar="user_id")
+    twitter = parser.add_argument_group("Twitter Arguments","Specific arguments for Twitter")
+    twitter.add_argument("--twitter", required=False, action="store_true", help="LikedIn")    
+    twitter.add_argument("--target-tw",required=False,action="store",help="User's Tweets you want to scrape",metavar="username")
     
     args = parser.parse_args()
 

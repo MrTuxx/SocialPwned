@@ -3,3 +3,4 @@ requests-toolbelt==0.7.0
 moviepy==0.2.2.11
 PySocks==1.6.8
 requests==2.19.1
+twint

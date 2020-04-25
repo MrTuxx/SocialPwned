@@ -4,7 +4,6 @@ import sys, requests, argparse, json, re, os, time
 from core.colors import colors
 from lib.InstagramAPI import InstagramAPI
 from lib.PwnDB import PwnDB
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 def getEmailsFromListOfUsers(api,items):
     targets = []

@@ -6,6 +6,7 @@ from lib.LinkedInAPI import Linkedin
 from lib.PwnDB import PwnDB
 from core import instagram
 from core import linkedin
+from core import twitter
 from core.colors import colors
 
 def saveResults(file,results):
@@ -29,7 +30,7 @@ def readCredentials(credentialsFile):
         with open(credentialsFile) as json_file:
             data = json.load(json_file)
         json_file.close()
-    except Exception as e:
+    except:
         print(colors.bad + " Incorrect JSON format" + colors.end)
         sys.exit()
 
@@ -40,7 +41,7 @@ def instagramParameters(args,ig_username,ig_password):
     api = InstagramAPI(ig_username,ig_password)
 
     if (api.login()):
-        print(colors.good + " Login Success!\n" + colors.end)
+        print(colors.good + " Successful login to Instagram!\n" + colors.end)
         if args.info:
             instagram.getLocationID(api,args.info)
 
@@ -80,7 +81,6 @@ def instagramParameters(args,ig_username,ig_password):
             results.extend(instagram.sortContacts(followers,followings))  
     else:
         print(colors.bad + " Can't Login to Instagram!" + colors.end)
-        #sys.exit()
 
     return results
     
@@ -90,7 +90,8 @@ def linkedinParameters(args,in_email,in_password):
     results = []
     api = Linkedin(in_email, in_password)
     if api.__dict__.get("success"):
-
+        print(colors.good + " Successful login to Linkedin!\n" + colors.end)
+        
         if args.company:
             linkedin.getCompanyInformation(api,args.company)
             users = []
@@ -122,7 +123,12 @@ def linkedinParameters(args,in_email,in_password):
                 results.extend(linkedin.getEmailsFromUsers(api, users))
             if args.add_contacts:
                 linkedin.sendContactRequestAListOfUsers(api,users)
-        
+
+        if args.target_in:
+            results.extend(linkedin.getUserInformation(api,args.target_in))
+            if args.add_contacts:
+                linkedin.sendContactRequest(api,args.target_in)
+
         if args.add_a_contact:
             linkedin.sendContactRequest(api,args.add_one_contact)
 
@@ -161,11 +167,14 @@ def run(args):
         in_password = creds.get("linkedin").get("password")
         results.extend(linkedinParameters(args,in_email,in_password))
     
+    if args.twitter:
+        twitter.getTwitterAboutATopic()
+
     if args.output:
         saveResults(args.output,results)
 
     if args.pwndb and results != [] and results != False:
-        juicyInformation = PwnDB.findLeak(results)
+        juicyInformation = PwnDB.findLeak(results,args.tor_proxy)
         PwnDB.saveResultsPwnDB(juicyInformation)
     elif results == []:
         print(colors.info + " No emails were found to search." + colors.end)

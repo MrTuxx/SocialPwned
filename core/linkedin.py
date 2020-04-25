@@ -86,6 +86,21 @@ def searchUsersOfCompany(api,nameCompany):
     
     return employees
 
+def getUserInformation(api,publicID):
+    results = []
+    # profile = api.get_profile(publicID)
+    # print(profile)
+    info = getContactInformation(api,publicID)
+    email = str(info.get("email"))
+    twitter = str(info.get("twitter"))
+    phone = str(info.get("phone"))
+    print(colors.good + " User: " + colors.W + publicID + colors.B + " Email: " + colors.W + email + colors.B + " Phone: " + colors.W + phone + colors.B + " Twitter: " + colors.W + twitter + colors.end)
+
+    if email != "Not Found":
+        results.append(json.dumps({"user":publicID,"userID":"Not-Found","email":email}))
+    return results
+
+
 def getContactInformation(api,publicID):
 
     print(colors.info + " Searching user contact information: " + publicID)
