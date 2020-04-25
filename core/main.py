@@ -48,19 +48,19 @@ def instagramParameters(args,ig_username,ig_password):
         if args.hashtag:
             results.extend(instagram.getUsersFromAHashTag(api,args.hashtag))
 
-        if args.target:
-            temp = instagram.getUserInformation(api,args.target)
+        if args.target_ig:
+            temp = instagram.getUserInformation(api,args.target_ig)
             if temp == False:
                 print(colors.info + " The user has a private profile or doesn't have public email..." + colors.end)
             else:
                 results.extend(temp)
                 if args.followers and not args.followings:
-                    results.extend(instagram.getUserFollowers(api,args.target))
+                    results.extend(instagram.getUserFollowers(api,args.target_ig))
                 if args.followings and not args.followers:
-                    results.extend(instagram.getUserFollowings(api,args.target))
+                    results.extend(instagram.getUserFollowings(api,args.target_ig))
                 if args.followers and args.followings:
-                    followers = instagram.getUserFollowers(api,args.target)
-                    followings =  instagram.getUserFollowings(api,args.target)
+                    followers = instagram.getUserFollowers(api,args.target_ig)
+                    followings =  instagram.getUserFollowings(api,args.target_ig)
                     results.extend(instagram.sortContacts(followers,followings))
               
         if args.location:
