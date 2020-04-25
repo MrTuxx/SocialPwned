@@ -54,11 +54,11 @@ def instagramParameters(args,ig_username,ig_password):
                 print(colors.info + " The user has a private profile or doesn't have public email..." + colors.end)
             else:
                 results.extend(temp)
-                if args.followers and not args.followings:
+                if args.followers_ig and not args.followings_ig:
                     results.extend(instagram.getUserFollowers(api,args.target_ig))
-                if args.followings and not args.followers:
+                if args.followings_ig and not args.followers_ig:
                     results.extend(instagram.getUserFollowings(api,args.target_ig))
-                if args.followers and args.followings:
+                if args.followers_ig and args.followings_ig:
                     followers = instagram.getUserFollowers(api,args.target_ig)
                     followings =  instagram.getUserFollowings(api,args.target_ig)
                     results.extend(instagram.sortContacts(followers,followings))
@@ -136,6 +136,29 @@ def linkedinParameters(args,in_email,in_password):
         print(colors.bad + " Can't Login to linkedin!" + colors.end)      
 
     return results
+
+def twitterParameters(args):
+    results = []
+    print(colors.good + " Using Twint!\n" + colors.end)
+    if args.target_tw:
+        
+        results.extend(twitter.getUserTweetsWithEmails(
+            args.target_tw,
+            args.limit,
+            args.year,
+            args.since,
+            args.until))
+    
+    if args.hashtag_tw:
+        results.extend(twitter.getTweetEmailsFromHashtag(
+            args.hashtag_tw,
+            args.limit,
+            args.year,
+            args.since,
+            args.until))
+
+    return results
+
         
 def run(args):
 
@@ -168,7 +191,7 @@ def run(args):
         results.extend(linkedinParameters(args,in_email,in_password))
     
     if args.twitter:
-        twitter.getTwitterAboutATopic()
+        results.extend(twitterParameters(args))
 
     if args.output:
         saveResults(args.output,results)
