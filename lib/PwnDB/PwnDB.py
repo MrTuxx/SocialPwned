@@ -89,6 +89,8 @@ def findLeak(emails,tor_proxy):
 
         item = json.loads(email)
         mail = item.get("email")
+        poc = mail.replace("(","")
+        mail = poc.replace(")","")
         user = item.get("user")
         userID = item.get("userID")
         username = mail.split("@")[0]

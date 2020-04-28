@@ -70,12 +70,6 @@ def getTweets(
     if profile_full:
         c.Profile_full = profile_full
     
-    # c.Search = "covid"
-    # c.Limit = 5
-    # c.Email = True
-    # #c.Store_json = True
-    # #c.Output = "result.txt"
-
     c.Store_object = True
     c.Store_object_tweets_list = tweets
 
