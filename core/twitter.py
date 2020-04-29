@@ -17,6 +17,8 @@ def getUserTweetsWithEmails(username,limit,year,since,until):
     results = getEmailsFromTweets(tweets)
     return results
 
+def getFollowers(username,limit):
+    return Twitter.getFollowers(username,limit)
 
 
 

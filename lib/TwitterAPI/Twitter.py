@@ -19,8 +19,6 @@ def getTweets(
     count = None,
     to = None,
     all_tweets = None,
-    followers = None,
-    followings = None,
     proxy_host = None,
     proxy_port = None,
     user_full = None,
@@ -57,10 +55,6 @@ def getTweets(
         c.To = to
     if all_tweets:
         c.All = all_tweets
-    if followers:
-        c.Followers = followers
-    if followings:
-        c.Following = followings
     if proxy_host:
         c.Proxy_host = proxy_host
     if proxy_port:
@@ -75,8 +69,24 @@ def getTweets(
 
     # Run
     twint.run.Search(c)
+    
+    return getListOfTweets(tweets)
+    
+def getFollowers(username,limit = 10):  
+    print("entra")
+    users = []
+    # Configure
+    c = twint.Config()
+    c.Username = username
+    c.Limit = limit
 
-    return getListOfTweets(tweets)     
+    c.Store_object = True
+    # Run
+    twint.run.Followers(c)
+    users = twint.output.follows_list
+
+    return users
+
 
 def getListOfTweets(tweets):
     results = []

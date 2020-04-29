@@ -140,14 +140,18 @@ def linkedinParameters(args,in_email,in_password):
 def twitterParameters(args):
     results = []
     print(colors.good + " Using Twint!\n" + colors.end)
-    if args.target_tw:
-        
+    if args.target_tw and not args.followers_tw:
         results.extend(twitter.getUserTweetsWithEmails(
             args.target_tw,
             args.limit,
             args.year,
             args.since,
             args.until))
+
+    if args.target_tw and args.followers_tw:
+        
+        users = twitter.getFollowers(args.target_tw,args.limit)
+        print(users)
     
     if args.hashtag_tw:
         results.extend(twitter.getTweetEmailsFromHashtag(
