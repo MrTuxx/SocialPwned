@@ -12,20 +12,20 @@ def getTweetEmailsFromHashtag(query,limit,year,since,until):
     results = getEmailsFromTweets(tweets)
     return results
 
-def getUserTweetsWithEmails(username,limit,year,since,until):
+def getUserTweetsWithEmails(username,limit,year,since,until,profile_full,all_tw):
     Twitter.getUserInformation(username)
     print(colors.good + " User " + username + "'s tweets will be searched for emails" + colors.end)
     results = []
-    tweets = Twitter.getTweets(username=username,limit=limit,year=year,since=since,until=until)
+    tweets = Twitter.getTweets(username=username,limit=limit,year=year,since=since,until=until,profile_full=profile_full,all_tweets=all_tw)
     results = getEmailsFromTweets(tweets)
     return results
 
-def getTweetEmailsFromListOfUsers(users,limit,year,since,until):
+def getTweetEmailsFromListOfUsers(users,limit,year,since,until,profile_full,all_tw):
 
     results = []
     print(colors.good + " Emails will be searched in the Tweets of " + str(len(users))+ " users :) " + colors.end)
     for user in users:
-        results.extend(getUserTweetsWithEmails(user,limit,year,since,until))
+        results.extend(getUserTweetsWithEmails(user,limit,year,since,until,profile_full,all_tw))
 
     return results
 
@@ -54,7 +54,7 @@ def getEmailsFromTweets(tweets):
             results.append(json.dumps({"user":user,"userID":userID,"email":email}))
             print(colors.good + " Username: " + colors.W + user + colors.B + " UserID: " + colors.W + userID + colors.B + " Email: " + colors.W + email + colors.end)
 
-    return results
+    return list(set(results))
 
 def findEmail(tweet):
     for word in tweet:

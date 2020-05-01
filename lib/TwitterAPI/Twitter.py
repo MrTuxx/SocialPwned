@@ -17,8 +17,6 @@ def getTweets(
     hashtags = None,
     userid = None,
     limit = 100,
-    count = None,
-    to = None,
     all_tweets = None,
     profile_full = None
     ):
@@ -29,7 +27,7 @@ def getTweets(
     c.Limit = limit
     c.Email = email
 
-    if username:
+    if username and not all_tweets:
         c.Username = username
     if search:
         c.Search = search
@@ -47,14 +45,10 @@ def getTweets(
         c.Hashtags = hashtags
     if userid:
         c.User_id = userid
-    if count:
-        c.Count = count
-    if to:
-        c.To = to
     if all_tweets:
-        c.All = all_tweets
+        c.All = username
     if profile_full:
-        c.Profile_full = profile_full
+        c.Profile_full = True
     
     c.Store_object = True
     c.Store_object_tweets_list = tweets
