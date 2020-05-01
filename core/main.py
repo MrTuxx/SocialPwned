@@ -45,8 +45,8 @@ def instagramParameters(args,ig_username,ig_password):
         if args.info:
             instagram.getLocationID(api,args.info)
 
-        if args.hashtag:
-            results.extend(instagram.getUsersFromAHashTag(api,args.hashtag))
+        if args.hashtag_ig:
+            results.extend(instagram.getUsersFromAHashTag(api,args.hashtag_ig))
 
         if args.target_ig:
             temp = instagram.getUserInformation(api,args.target_ig)
@@ -140,7 +140,7 @@ def linkedinParameters(args,in_email,in_password):
 def twitterParameters(args):
     results = []
     print(colors.good + " Using Twint!\n" + colors.end)
-    print(args.profile_full)
+
     if args.target_tw and not args.followers_tw and not args.followings_tw:
         results.extend(twitter.getUserTweetsWithEmails(
             args.target_tw,
