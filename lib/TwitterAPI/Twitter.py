@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import twint
+from core.colors import colors
 
 
 def getTweets(
@@ -15,16 +16,13 @@ def getTweets(
     verified = None,
     hashtags = None,
     userid = None,
-    limit = 10,
+    limit = 100,
     count = None,
     to = None,
     all_tweets = None,
-    proxy_host = None,
-    proxy_port = None,
-    user_full = None,
     profile_full = None
+    ):
 
-):
     tweets = []
     # Configure
     c = twint.Config()
@@ -55,12 +53,6 @@ def getTweets(
         c.To = to
     if all_tweets:
         c.All = all_tweets
-    if proxy_host:
-        c.Proxy_host = proxy_host
-    if proxy_port:
-        c.Proxy_port = proxy_port
-    if user_full:
-        c.User_full = user_full
     if profile_full:
         c.Profile_full = profile_full
     
@@ -72,21 +64,43 @@ def getTweets(
     
     return getListOfTweets(tweets)
     
-def getFollowers(username,limit = 10):  
-    print("entra")
+def getFollowers(
+    username,
+    limit = 100
+    ):  
+    
     users = []
-    # Configure
+
     c = twint.Config()
     c.Username = username
     c.Limit = limit
-
     c.Store_object = True
-    # Run
     twint.run.Followers(c)
     users = twint.output.follows_list
-
     return users
 
+def getFollowings(
+    username,
+    limit = 100
+    ):
+    
+    users = []
+
+    c = twint.Config()
+    c.Username = username
+    c.Limit = limit
+    c.Store_object = True
+    twint.run.Following(c)
+    users = twint.output.follows_list
+    return users
+
+
+def getUserInformation(username):
+    print(colors.good + " Getting the information from the user: " + username + "\n" + colors.W)
+    c = twint.Config()
+    c.Username = username
+    twint.run.Lookup(c)
+    print("\n"+colors.end)
 
 def getListOfTweets(tweets):
     results = []
