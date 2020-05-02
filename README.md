@@ -36,3 +36,26 @@ $ git clone https://github.com/MrTuxx/SocialPwned.git
 $ cd SocialPwned
 $ pip3 install -r requirements.txt
 ```
+## Usage
+
+To make use of the Instagram and Linkedin features you need to have an account created on each of the social networks. The credentials must be indicated in a JSON file:
+```
+{
+    "instagram":{
+        "username":"username",
+        "password":"password"
+    },
+    "linkedin":{
+        "email":"email",
+        "password":"password"
+    }
+}
+
+```
+usage: socialpwned.py [-h] --credentials CREDENTIALS [--pwndb] [--output FILE] [--tor-proxy PROXY] [--instagram] [--info QUERY]
+                      [--location LOCATION_ID] [--hashtag-ig QUERY] [--target-ig USER_ID] [--search-users-ig QUERY] [--my-followers]
+                      [--my-followings] [--followers-ig] [--followings-ig] [--linkedin] [--company COMPANY_ID] [--search-companies QUERY]
+                      [--employees] [--my-contacts] [--user-contacts USER_ID] [--search-users-in QUERY] [--target-in USERNAME] [--add-contacts]
+                      [--add-a-contact USER_ID] [--twitter] [--limit LIMIT] [--year YEAR] [--since DATE] [--until DATE] [--profile-full]
+                      [--all-tw] [--target-tw USERNAME] [--hashtag-tw USERNAME] [--followers-tw] [--followings-tw]
+```
