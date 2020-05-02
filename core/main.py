@@ -66,8 +66,8 @@ def instagramParameters(args,ig_username,ig_password):
         if args.location:
             results.extend(instagram.getUsersFromLocation(api,args.location))
 
-        if args.search_user:
-            results.extend(instagram.getUsersOfTheSearch(api,args.search_user))
+        if args.search_users_ig:
+            results.extend(instagram.getUsersOfTheSearch(api,args.search_users_ig))
             
         if args.my_followers and not args.my_followings:
             results.extend(instagram.getMyFollowers(api))
@@ -117,8 +117,8 @@ def linkedinParameters(args,in_email,in_password):
         if args.user_contacts:
             results.extend(linkedin.getEmailsFromUsers(api,linkedin.getFollowers(api,args.user_contacts)))
 
-        if args.search_users:
-            users = linkedin.searchUsers(api,args.search_users)
+        if args.search_users_in:
+            users = linkedin.searchUsers(api,args.search_users_in)
             if args.pwndb:
                 results.extend(linkedin.getEmailsFromUsers(api, users))
             if args.add_contacts:
