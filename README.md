@@ -25,14 +25,14 @@ SocialPwned uses different modules:
 
 The installation of **Tor** depends on your system. On a Debian:
 ```
-sudo apt-get install tor
-/etc/init.d/tor start
+$ sudo apt-get install tor
+$ /etc/init.d/tor start
 ```
 >NOTE: tor service must be up and running to be connected to port 9050
 
 Clone the repository using **Git**:
 ```
-git clone https://github.com/MrTuxx/SocialPwned.git
-cd SocialPwned
-pip3 install -r requirements.txt
+$ git clone https://github.com/MrTuxx/SocialPwned.git
+$ cd SocialPwned
+$ pip3 install -r requirements.txt
 ```
