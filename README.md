@@ -61,10 +61,10 @@ usage: socialpwned.py [-h] --credentials CREDENTIALS [--pwndb] [--output FILE] [
                       [--all-tw] [--target-tw USERNAME] [--hashtag-tw USERNAME] [--followers-tw] [--followings-tw]
 ```
 
-## Basic Examples and Combos
+## Basic Examples and Combos 🚀
 
 ## Limitations
 
 ## References
 
-## Disclaimer
+## ⚠ Disclaimer
