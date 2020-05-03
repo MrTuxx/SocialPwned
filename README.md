@@ -137,3 +137,7 @@ python3 socialpwned.py --credentials credentials.json --instagram --target-ig us
 - [PwnDB](https://github.com/davidtavarez/pwndb). Author: davidtavarez
 
 ## Disclaimer
+
+The usage of SocialPwned to attack targets without prior mutual consent is illegal. In addition, it makes use of different modules that violate Linkedin and Instagram rules, therefore, you will be banned temporarily or permanently.
+
+It is the responsibility of the end user to use SocialPwned. The developers are not responsible and are not liable for any misuse or damage caused.
