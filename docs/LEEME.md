@@ -64,8 +64,12 @@ usage: socialpwned.py [-h] --credentials CREDENTIALS [--pwndb] [--output FILE] [
 
 ## Ejemplos Básicos y Combos 🚀
 
+A continuación, se muestran algunos ejemplos:
+
 ### Instagram
 
+![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/1-3.png "Users with email in Instagram")
+![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/1-4.png "Leaks Found")
 ```
 python3 socialpwned.py --credentials credentials.json --instagram --info España
 ```
@@ -84,6 +88,8 @@ python3 socialpwned.py --credentials credentials.json --instagram --target-ig us
 
 ### Linkedin
 
+![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/2-2.png "Searching employees of a company in Linkedin")
+![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/2-4.png "Leaks Found")
 ```
 python3 socialpwned.py --credentials credentials.json --linkedin --search-companies "My Target"
 ```
@@ -103,6 +109,8 @@ python3 socialpwned.py --credentials credentials.json --linkedin --user-contacts
 python3 socialpwned.py --credentials credentials.json --linkedin --user-contacts user-id --add-contacts
 ```
 ### Twitter
+![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/3-1.png "Searching in Twitter")
+
 ```
 python3 socialpwned.py --credentials credentials.json --twitter --hashtag-tw someHashtag --pwndb --limit 200
 ```
