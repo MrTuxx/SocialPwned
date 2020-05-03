@@ -63,6 +63,64 @@ usage: socialpwned.py [-h] --credentials CREDENTIALS [--pwndb] [--output FILE] [
 
 ## Basic Examples and Combos 🚀
 
+### Instagram
+
+```
+python3 socialpwned.py --credentials credentials.json --instagram --info España
+```
+```
+python3 socialpwned.py --credentials credentials.json --instagram --location 832578276
+```
+```
+python3 socialpwned.py --credentials credentials.json --instagram --hashtag-ig someHashtag --pwndb
+```
+```
+python3 socialpwned.py --credentials credentials.json --instagram --target-ig username --pwndb
+```
+```
+python3 socialpwned.py --credentials credentials.json --instagram --target-ig username --followers-ig --followings-ig --pwndb
+```
+
+### Linkedin
+
+```
+python3 socialpwned.py --credentials credentials.json --linkedin --search-companies "My Target"
+```
+```
+python3 socialpwned.py --credentials credentials.json --linkedin --search-companies "My Target" --employees --pwndb
+```
+```
+python3 socialpwned.py --credentials credentials.json --linkedin --company 123456789 --employees --pwndb
+```
+```
+python3 socialpwned.py --credentials credentials.json --linkedin --company 123456789 --employees --add-contacts
+```
+```
+python3 socialpwned.py --credentials credentials.json --linkedin --user-contacts user-id --pwndb
+```
+```
+python3 socialpwned.py --credentials credentials.json --linkedin --user-contacts user-id --add-contacts
+```
+### Twitter
+```
+python3 socialpwned.py --credentials credentials.json --twitter --hashtag-tw someHashtag --pwndb --limit 200
+```
+```
+python3 socialpwned.py --credentials credentials.json --twitter --target-tw username --all-tw --pwndb
+```
+```
+python3 socialpwned.py --credentials credentials.json --twitter --target-tw username --all-tw --followers-tw --followings-tw --pwndb
+```
+
+### Combos
+
+```
+python3 socialpwned.py --credentials credentials.json --instagram --target-ig username --followers-ig --followings-ig --linkedin --company 123456789 --employees --twitter --target-tw username --all-tw --pwndb --output results.txt
+```
+```
+python3 socialpwned.py --credentials credentials.json --instagram --target-ig username --linkedin --target-in username --twitter --target-tw username --all-tw --pwndb
+```
+
 ## Limitations
 
 ## References

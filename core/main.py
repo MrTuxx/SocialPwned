@@ -108,14 +108,17 @@ def linkedinParameters(args,in_email,in_password):
             if args.employees:
                 users = linkedin.getCompanyEmployees(api,companies)
                 results.extend(linkedin.getEmailsFromUsers(api, users))
-            if args.add_contacts and args.add_contacts:
+            if args.add_contacts:
                 linkedin.sendContactRequestAListOfUsers(api,users)
 
         if args.my_contacts:
             results.extend(linkedin.getEmailsFromUsers(api,linkedin.getMyContacts(api)))
 
         if args.user_contacts:
-            results.extend(linkedin.getEmailsFromUsers(api,linkedin.getFollowers(api,args.user_contacts)))
+            users = linkedin.getFollowers(api,args.user_contacts)
+            results.extend(linkedin.getEmailsFromUsers(api,users))
+            if args.add_contacts:
+                linkedin.sendContactRequestAListOfUsers(api,users)
 
         if args.search_users_in:
             users = linkedin.searchUsers(api,args.search_users_in)
