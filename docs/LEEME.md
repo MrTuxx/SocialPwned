@@ -1,7 +1,7 @@
 # SocialPwned
 
 <p align="right">
-  <a href=https://github.com/MrTuxx/SocialPwned/blob/master/docs/LEEME.md>English🗨</a>
+  <a href=https://github.com/MrTuxx/SocialPwned/blob/master/README.md>English🗨</a>
 </p>
 
 ![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/SocialPwned.PNG "SocialPwned Welcome")
