@@ -60,3 +60,11 @@ usage: socialpwned.py [-h] --credentials CREDENTIALS [--pwndb] [--output FILE] [
                       [--add-a-contact USER_ID] [--twitter] [--limit LIMIT] [--year YEAR] [--since DATE] [--until DATE] [--profile-full]
                       [--all-tw] [--target-tw USERNAME] [--hashtag-tw USERNAME] [--followers-tw] [--followings-tw]
 ```
+
+## Basic Examples and Combos
+
+## Limitations
+
+## References
+
+## Disclaimer
