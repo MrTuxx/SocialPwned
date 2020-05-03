@@ -67,4 +67,4 @@ usage: socialpwned.py [-h] --credentials CREDENTIALS [--pwndb] [--output FILE] [
 
 ## References
 
-## ⚠ Disclaimer
+## Disclaimer
