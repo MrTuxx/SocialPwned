@@ -129,8 +129,11 @@ python3 socialpwned.py --credentials credentials.json --instagram --target-ig us
 python3 socialpwned.py --credentials credentials.json --instagram --target-ig username --linkedin --target-in username --twitter --target-tw username --all-tw --pwndb
 ```
 
-## Limitations
-
 ## References
+
+- [Instagram API](https://github.com/LevPasha/Instagram-API-python). Author: LevPasha
+- [Linkedin API](https://github.com/tomquirk/linkedin-api). Author: tomquirk
+- [Twint](https://github.com/twintproject/twint). Author: twintproject
+- [PwnDB](https://github.com/davidtavarez/pwndb). Author: davidtavarez
 
 ## Disclaimer
