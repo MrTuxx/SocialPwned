@@ -126,3 +126,4 @@ dmypy.json
 Credentials.txt
 results.txt
 output.txt
+.gitignore
