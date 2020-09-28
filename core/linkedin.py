@@ -100,7 +100,6 @@ def getUserInformation(api,publicID):
         results.append(json.dumps({"user":publicID,"userID":"Not-Found","email":email}))
     return results
 
-
 def getContactInformation(api,publicID):
 
     print(colors.info + " Searching user contact information: " + publicID)
@@ -152,7 +151,6 @@ def getMyContacts(api):
     followers = getFollowers(api,userID)
     print(colors.info + " " + str(len(followers)) + " contacts have been found ^-^" + colors.end)
     return followers
-
 
 def getMyUserID(api):
     profile = api.get_current_profile()
