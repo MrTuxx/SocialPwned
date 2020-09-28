@@ -61,8 +61,8 @@ def searchUsers(api,query):
     items = api.search_people(keywords=query)
     
     for item in items:
-        user = item.get("public_id")
-        userID = item.get("urn_id")
+        user = str(item.get("public_id"))
+        userID = str(item.get("urn_id"))
         print(colors.good + " User: " + colors.W + user + colors.B + " userID: " + colors.W + userID + colors.end)
     print(colors.info + " " + str(len(items)) + " users have been found ^-^" + colors.end)
     return items
@@ -72,8 +72,8 @@ def searchCompanies(api,query):
     items = api.search_companies(query)
     
     for item in items:
-        nameCompany = item.get("name")
-        companyID = item.get("urn_id")
+        nameCompany = str(item.get("name"))
+        companyID = str(item.get("urn_id"))
         numberEmployees = str(item.get("subline"))
         print(colors.good + " Name: " + colors.W + nameCompany + colors.B + " company ID: " + colors.W + companyID + colors.B + " Number of employees: " + colors.W + numberEmployees + colors.end)
     print(colors.info + " " + str(len(items)) + " companies have been found ^-^" + colors.end)
