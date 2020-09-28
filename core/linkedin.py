@@ -10,10 +10,10 @@ def getCompanyInformation(api,companyID):
     info = api.get_company(companyID)
     locations = info['confirmedLocations']
     for location in locations:
-        country = location.get("country")
-        area = location.get("geographicArea")
-        city = location.get("city")
-        postalCode = location.get("postalCode")
+        country = str(location.get("country"))
+        area = str(location.get("geographicArea"))
+        city = str(location.get("city"))
+        postalCode = str(location.get("postalCode"))
         print(colors.good + " Country: " + colors.W + country + colors.B + " Area: " + colors.W + area + colors.B + " City: " + colors.W + city + colors.B + " Postal Code: " + colors.W + postalCode + colors.end ) 
 
 def getEmployeesFromCurrentCompany(api,companyID):
@@ -27,8 +27,8 @@ def getEmailsFromUsers(api,employees):
     results = []
     for employee in employees:
         
-        employeeID = employee.get("public_id")
-        userID = employee.get("urn_id")
+        employeeID = str(employee.get("public_id"))
+        userID = str(employee.get("urn_id"))
         info = getContactInformation(api,employeeID)
         email = str(info.get("email"))
         twitter = str(info.get("twitter"))

@@ -4,7 +4,6 @@ import argparse
 from core.main import run
 import core.banner as banner
 
-
 if __name__ == "__main__":
     banner.banner()
     parser = argparse.ArgumentParser(description="Social Pwned",prog='socialpwned.py',formatter_class=lambda prog: argparse.HelpFormatter(prog,max_help_position=40))
