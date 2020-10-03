@@ -17,7 +17,7 @@ if __name__ == "__main__":
     instagram.add_argument("--info",required=False, action="store", help="Get information about locations and their IDs.",metavar="QUERY")
     instagram.add_argument("--location",required=False, action="store", help="Get users with public email from a location ID.",metavar="LOCATION_ID")
     instagram.add_argument("--hashtag-ig",required=False, action="store", help="Get users with public email from a hashtag.",metavar="QUERY")
-    instagram.add_argument("--target-ig",required=False, action="store", help="Get email, user ID, followers and followings of a specific username.",metavar="USER_ID")
+    instagram.add_argument("--target-ig",required=False, action="store", help="Get email, user ID, followers and followings of a specific username.",metavar="USERNAME")
     instagram.add_argument("--search-users-ig",required=False, action="store", help="Search any user in Instagram",metavar="QUERY")
     instagram.add_argument("--my-followers",required=False, action="store_true", help="Get users with public email from your followers")
     instagram.add_argument("--my-followings",required=False, action="store_true", help="Get users with public email from your followings")
