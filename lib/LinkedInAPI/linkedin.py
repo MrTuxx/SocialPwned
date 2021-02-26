@@ -93,7 +93,6 @@ class Linkedin(object):
             "start": len(results),
             "queryContext": "List(spellCorrectionEnabled->true,relatedSearchesEnabled->true,kcardTypes->PROFILE|COMPANY)",
         }
-
         default_params.update(params)
 
         res = self._fetch(
@@ -172,6 +171,7 @@ class Linkedin(object):
         params = {"filters": "List({})".format(",".join(filters))}
 
         if keywords:
+            keywords = keywords.replace(","," ")
             params["keywords"] = keywords
 
         data = self.search(params, limit=limit)
