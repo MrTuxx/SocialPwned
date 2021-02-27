@@ -171,7 +171,7 @@ class Linkedin(object):
         params = {"filters": "List({})".format(",".join(filters))}
 
         if keywords:
-            keywords = keywords.replace(',',' ')
+            keywords = keywords.replace(',','')
             params["keywords"] = keywords
 
         data = self.search(params, limit=limit)
@@ -202,6 +202,7 @@ class Linkedin(object):
         }
 
         if keywords:
+            keywords = keywords.replace(',','')
             params["keywords"] = keywords
 
         data = self.search(params, limit=limit)
