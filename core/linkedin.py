@@ -69,7 +69,7 @@ def searchUsers(api,query):
 
 def searchCompanies(api,query):
     print(colors.info + " Searching companies... :)" + colors.end)
-    query = query.replace(","," ")
+    query = query.replace(',',' ')
     items = api.search_companies(query)
     
     for item in items:
