@@ -29,7 +29,7 @@ def haveIBeenPwned(email):
 
         infoAboutLeak = []
         if pwned:
-            print("Sources Found")
+            print(colors.info + " Sources Found" + colors.end)
             sources = response.xpath('//div[@id="pwnedSites"]/div/@id').getall()
             descriptions = response.xpath('//div[@id="pwnedSites"]/div[@class="pwnedSearchResult pwnedWebsite panel-collapse in"]/div[@class="container"]/div[@class="row"]/div[@class="col-sm-10"]').xpath('.//p')
 
@@ -40,7 +40,7 @@ def haveIBeenPwned(email):
                     text = striphtml(text)
                     infoAboutLeak.append(json.dumps({'Source': sources[index_source], 'Description': text}))      
         else:
-            print(colors.info + "Sources not Found" + colors.end)
+            print(colors.info + " Sources not Found" + colors.end)
     except Exception as e:
         print(e)
         infoAboutLeak.append(" Sources not found")

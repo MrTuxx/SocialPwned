@@ -128,6 +128,7 @@ dmypy.json
 .pyre/
 
 #mine
+lib/LinkedInAPI/cookies/
 *.json
 PwnDBResults.txt
 results.txt
