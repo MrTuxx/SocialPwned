@@ -2,4 +2,4 @@ moviepy==0.2.2.11
 requests-toolbelt==0.7.0
 PySocks==1.6.8
 requests==2.20.0
-twint
+scrapy

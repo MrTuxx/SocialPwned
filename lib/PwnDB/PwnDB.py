@@ -1,54 +1,58 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import requests, json, time, random, sys
+import requests, json, time, random, sys, scrapy, re
+from scrapy.selector import Selector
 from core.colors import colors
 
 def haveIBeenPwned(email):
     
-    cookies = {
-        '__cfduid': 'db69bfd7ae01e4d5d3c3f1e9c8a89bff41585353125',
-        'ai_user': '5Ner1|2020-03-27T23:52:08.257Z',
-        '_ga': 'GA1.2.1775275446.1585353129',
-        '_gid': 'GA1.2.1675250400.1585501117',
-        'ai_session': 'ZPXdR|1585501117405|1585503143569',
-        'Searches': '7',
-        'BreachedSites': '28',
-        'Pastes': '0',
-    }
-
+    url = 'https://haveibeenpwned.com:443/account/'+str(email)
+    payload = ""
     headers = {
-        'Host': 'haveibeenpwned.com',
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0',
-        'Accept': '*/*',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Accept-Encoding': 'gzip, deflate',
-        'Referer': 'https://haveibeenpwned.com/',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Request-Id': '|DOpkD.junPv',
-        'Request-Context': 'appId=cid-v1:bcc569a3-d364-4306-8bbe-83e9fe4d020e',
-        'Connection': 'close',
-    }
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0",
+        "Connection": "close",
+        "Host": "haveibeenpwned.com",
+        "Accept-Encoding": "gzip, deflate", 
+        "Upgrade-Insecure-Requests": "1",
+        "Accept-Language": "en-US,en;q=0.5"
+        }
 
     print(colors.info + " Searching information about Leaks found :)" + colors.end)
 
     try:
-        response = requests.get('http://haveibeenpwned.com/unifiedsearch/'+str(email), headers=headers, cookies=cookies, verify=False)
+        response = requests.request("GET", url, data=payload, headers=headers, verify=False)
+        response = Selector(response)
+        pwned = response.xpath('//div[@class="pwnedSearchResult pwnedRow panel-collapse in"]/div[@class="container"]/div[@class="row pwnResultBanner"]/div[@class="pwnTitle"]/h2/text()').get()
+        no_pwned = response.xpath('//div[@class="pwnedSearchResult panel-collapse in"]/div[@class="container"]/div[@class="row pwnResultBanner"]/div[@class="pwnTitle"]/h2/text()').get()
 
         infoAboutLeak = []
-        items = json.loads(response.text)
-        breaches = items['Breaches']
+        if pwned:
+            print("Sources Found")
+            sources = response.xpath('//div[@id="pwnedSites"]/div/@id').getall()
+            descriptions = response.xpath('//div[@id="pwnedSites"]/div[@class="pwnedSearchResult pwnedWebsite panel-collapse in"]/div[@class="container"]/div[@class="row"]/div[@class="col-sm-10"]').xpath('.//p')
 
-        for breache in breaches:
-            name = breache['Name']
-            domain = breache['Domain']
-            date = breache['BreachDate']
-            infoAboutLeak.append(json.dumps({'name': name, 'domain': domain, 'date': date}))
-    except:
+            for idx, description in enumerate(descriptions):
+                text = description.get()
+                if (idx % 2) == 0:
+                    index_source = idx // 2
+                    text = striphtml(text)
+                    infoAboutLeak.append(json.dumps({'Source': sources[index_source], 'Description': text}))      
+        else:
+            print(colors.info + "Sources not Found" + colors.end)
+    except Exception as e:
+        print(e)
         infoAboutLeak.append(" Sources not found")
     
     return infoAboutLeak
-        
+
+def striphtml(data):
+	data = data.replace('\n',' ')
+	data = data.replace('"','')
+	pattern = re.compile(r'<.*?>')
+	return pattern.sub('', data)
+
 def parsePwndbResponse(mail,text):
     if "Array" not in text:
         return None
