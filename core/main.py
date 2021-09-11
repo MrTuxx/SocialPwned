@@ -198,7 +198,7 @@ def run(args):
         sys.exit()
     
     if args.pwndb:
-        status = os.system('systemctl is-active --quiet tor')
+        status = os.system('service tor status > /dev/null')
         if status != 0:
             print(colors.bad + " Can't connect to service! restart tor service and try again." + colors.end)
             sys.exit()
