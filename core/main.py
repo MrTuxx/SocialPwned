@@ -7,6 +7,7 @@ from lib.PwnDB import PwnDB
 from core import instagram
 from core import linkedin
 from core import twitter
+from core import ghunt
 from core.colors import colors
 
 def saveResults(file,results):
@@ -182,6 +183,10 @@ def twitterParameters(args):
 
     return results
 
+def ghuntParameters(args):
+    print("GHunt")
+    ghunt.emailHunt(args)
+
         
 def run(args):
 
@@ -215,6 +220,9 @@ def run(args):
     
     if args.twitter:
         results.extend(twitterParameters(args))
+    
+    if args.ghunt:
+        ghuntParameters(args)
 
     if args.output:
         saveResults(args.output,results)

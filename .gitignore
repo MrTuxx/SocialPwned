@@ -127,6 +127,16 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+#GHunt
+profile_pics/*.jpg
+lib/GHunt/resources/
+chromedriver
+chromedriver.exe
+data.txt
+login.py
+.DS_Store
+debug.log
+
 #mine
 lib/LinkedInAPI/cookies/
 *.json
