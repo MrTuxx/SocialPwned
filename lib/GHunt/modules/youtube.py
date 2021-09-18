@@ -16,7 +16,6 @@ from bs4 import BeautifulSoup as bs
 from geopy.geocoders import Nominatim
 
 from lib.GHunt import config
-from lib.GHunt.lib.banner import banner
 import lib.GHunt.lib.gmaps as gmaps
 import lib.GHunt.lib.youtube as ytb
 from lib.GHunt.lib.utils import *

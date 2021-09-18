@@ -14,7 +14,7 @@ headless         = True # if True, it doesn't show the browser while scraping GM
 ytb_hunt_always  = True # if True, search the Youtube channel everytime
 gmaps_radius     = 30 # in km. The radius distance to create groups of gmaps reviews.
 gdocs_public_doc = "1jaEEHZL32t1RUN5WuZEnFpqiEPf_APYKrRBG9LhLdvE"  # The public Google Doc to use it as an endpoint, to use Google's Search.
-data_path        = "resources/data.txt"
+data_path        = "lib/GHunt/resources/data.txt"
 browser_waiting_timeout = 120
 
 # Profile pictures options

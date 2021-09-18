@@ -183,9 +183,10 @@ def twitterParameters(args):
 
     return results
 
-def ghuntParameters(args):
-    print("GHunt")
-    ghunt.emailHunt(args)
+def ghuntParameters(args,ghunt_SID,ghunt_SSID,ghunt_APISID,ghunt_SAPISID,ghunt_HSID):
+    print(colors.good + " Using GHunt!\n" + colors.end)
+    ghunt.checkAndGen(ghunt_SID,ghunt_SSID,ghunt_APISID,ghunt_SAPISID,ghunt_HSID)
+    ghunt.emailHunt("prueba@gmail.com")
 
         
 def run(args):
@@ -222,7 +223,12 @@ def run(args):
         results.extend(twitterParameters(args))
     
     if args.ghunt:
-        ghuntParameters(args)
+        ghunt_SID = creds.get("ghunt").get("SID")
+        ghunt_SSID = creds.get("ghunt").get("SSID")
+        ghunt_APISID = creds.get("ghunt").get("APISID")
+        ghunt_SAPISID = creds.get("ghunt").get("SAPISID")
+        ghunt_HSID = creds.get("ghunt").get("HSID")
+        ghuntParameters(args,ghunt_SID,ghunt_SSID,ghunt_APISID,ghunt_SAPISID,ghunt_HSID)
 
     if args.output:
         saveResults(args.output,results)

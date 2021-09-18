@@ -10,12 +10,13 @@ import httpx
 from seleniumwire import webdriver
 from selenium.common.exceptions import TimeoutException as SE_TimeoutExepction
 
-import config
-from lib.utils import *
+from lib.GHunt import config
+from lib.GHunt.lib.utils import *
+from core.colors import colors
 
 
 # We change the current working directory to allow using GHunt from anywhere
-os.chdir(Path(__file__).parents[0])
+#os.chdir(Path(__file__).parents[0])
 
 def get_saved_cookies():
     ''' returns cookie cache if exists '''
@@ -24,12 +25,12 @@ def get_saved_cookies():
             with open(config.data_path, 'r') as f:
                 out = json.loads(f.read())
                 cookies = out["cookies"]
-                print("[+] Detected stored cookies, checking it")
+                print(colors.good + " Detected stored cookies, checking it" + colors.end)
                 return cookies
         except Exception:
-            print("[-] Stored cookies are corrupted")
+            print(colors.bad + " Stored cookies are corrupted" + colors.end)
             return False
-    print("[-] No stored cookies found")
+    print(colors.info + " No stored cookies found" + colors.info)
     return False
 
 
@@ -60,24 +61,24 @@ def save_tokens(hangouts_auth, gdoc_token, hangouts_token, internal_token, inter
 def get_hangouts_tokens(driver, cookies, tmprinter):
     ''' gets auth and hangouts token '''
 
-    tmprinter.out("Setting cookies...")
+    tmprinter.out(colors.info + " Setting cookies..." + colors.end)
     driver.get("https://hangouts.google.com/robots.txt")
     for k, v in cookies.items():
         driver.add_cookie({'name': k, 'value': v})
 
-    tmprinter.out("Fetching Hangouts homepage...")
+    tmprinter.out(colors.info + " Fetching Hangouts homepage..." + colors.end)
     driver.get("https://hangouts.google.com")
 
-    tmprinter.out("Waiting for the /v2/people/me/blockedPeople request, it "
-                  "can takes a few minutes...")
+    tmprinter.out(colors.info + " Waiting for the /v2/people/me/blockedPeople request, it "
+                  "can takes a few minutes..." + colors.end)
     try:
         req = driver.wait_for_request('/v2/people/me/blockedPeople', timeout=config.browser_waiting_timeout)
-        tmprinter.out("Request found !")
+        tmprinter.out(colors.info + " Request found !" + colors.end)
         driver.close()
         tmprinter.out("")
     except SE_TimeoutExepction:
         tmprinter.out("")
-        exit("\n[!] Selenium TimeoutException has occured. Please check your internet connection, proxies, vpns, et cetera.")
+        exit(colors.bad + " Selenium TimeoutException has occured. Please check your internet connection, proxies, vpns, et cetera." + colors.end)
 
 
     hangouts_auth = req.headers["Authorization"]
@@ -105,22 +106,22 @@ def get_internal_tokens(driver, cookies, tmprinter):
 
     internal_auth = ""
 
-    tmprinter.out("Setting cookies...")
+    tmprinter.out(colors.info + " Setting cookies..." + colors.end)
     driver.get("https://drive.google.com/robots.txt")
     for k, v in cookies.items():
         driver.add_cookie({'name': k, 'value': v})
 
     start = time()
 
-    tmprinter.out("Fetching Drive homepage...")
+    tmprinter.out(colors.info + " Fetching Drive homepage..." + colors.end)
     driver.request_interceptor = drive_interceptor
     driver.get("https://drive.google.com/drive/my-drive")
 
     body = driver.page_source
     internal_token = body.split("appsitemsuggest-pa")[1].split(",")[3].strip('"')
 
-    tmprinter.out(f"Waiting for the authorization header, it "
-                    "can takes a few minutes...")
+    tmprinter.out(colors.info + f" Waiting for the authorization header, it "
+                    "can takes a few minutes..." + colors.end)
 
     while True:
         if internal_auth and internal_token:
@@ -128,62 +129,46 @@ def get_internal_tokens(driver, cookies, tmprinter):
             break
         elif time() - start > config.browser_waiting_timeout:
             tmprinter.clear()
-            exit("[-] Timeout while fetching the Internal tokens.\nPlease increase the timeout in config.py or try again.")
+            exit(colors.bad + " Timeout while fetching the Internal tokens.\nPlease increase the timeout in config.py or try again." + colors.end)
 
     del driver.request_interceptor
 
     return internal_auth, internal_token
 
-if __name__ == '__main__':
+def check_and_gen(ghunt_SID,ghunt_SSID,ghunt_APISID,ghunt_SAPISID,ghunt_HSID):
 
     driverpath = get_driverpath()
     cookies_from_file = get_saved_cookies()
 
     tmprinter = TMPrinter()
 
-    cookies = {"SID": "", "SSID": "", "APISID": "", "SAPISID": "", "HSID": "", "CONSENT": config.default_consent_cookie, "PREF": config.default_pref_cookie}
+    cookies = {"SID": ghunt_SID, "SSID": ghunt_SSID, "APISID": ghunt_APISID, "SAPISID": ghunt_SAPISID, "HSID": ghunt_HSID, "CONSENT": config.default_consent_cookie, "PREF": config.default_pref_cookie}
 
     new_cookies_entered = False
 
     if not cookies_from_file:
         new_cookies_entered = True
-        print("\nEnter these browser cookies found at accounts.google.com :")
-        for name in cookies.keys():
-            if not cookies[name]:
-                cookies[name] = input(f"{name} => ").strip().strip('\"')
+        print(colors.good + " Cookies obtained from the json file" + colors.end)
     else:
         # in case user wants to enter new cookies (example: for new account)
         html = get_authorization_source(cookies_from_file)
         valid = False
         if html:
-            print("\n[+] The cookies seems valid !")
+            print(colors.good + " The cookies seems valid !" + colors.end)
             valid = True
         else:
-            print("\n[-] Seems like the cookies are invalid.")
-        new_gen_inp = input("\nDo you want to enter new browser cookies from accounts.google.com ? (Y/n) ").lower()
-        if new_gen_inp == "y":
-            new_cookies_entered = True
-            for name in cookies.keys():
-                if not cookies[name]:
-                    cookies[name] = input(f"{name} => ").strip().strip('\"')
-        elif not valid:
-            exit("Please put valid cookies. Exiting...")
+            print(colors.bad + " eems like the cookies are invalid." + colors.end)
+            exit(colors.bad + " Please put valid cookies. Exiting... " + colors.end)
 
 
     # Validate cookies
     if new_cookies_entered or not cookies_from_file:
         html = get_authorization_source(cookies)
         if html:
-            print("\n[+] The cookies seems valid !")
+            print(colors.good + " The cookies seems valid !" + colors.end)
         else:
-            exit("\n[-] Seems like the cookies are invalid, try regenerating them.")
+            exit(colors.bad + " Seems like the cookies are invalid, try regenerating them." + colors.end)
     
-    if not new_cookies_entered:
-        cookies = cookies_from_file
-        choice = input("Do you want to generate new tokens ? (Y/n) ").lower()
-        if choice != "y":
-            exit()
-
     # Start the extraction process
 
     # We first initialize the browser driver
@@ -192,30 +177,30 @@ if __name__ == '__main__':
         'connection_timeout': None  # Never timeout, otherwise it floods errors
     }
 
-    tmprinter.out("Starting browser...")
+    tmprinter.out(colors.info + " Starting browser..." + colors.end)
     driver = webdriver.Chrome(
         executable_path=driverpath, seleniumwire_options=options,
         chrome_options=chrome_options
     )
     driver.header_overrides = config.headers
 
-    print("Extracting the tokens...\n")
+    print(colors.info + " Extracting the tokens..." + colors.end)
     # Extracting Google Docs token
     trigger = '\"token\":\"'
     if trigger not in html:
-        exit("[-] I can't find the Google Docs token in the source code...\n")
+        exit(colors.bad +" I can't find the Google Docs token in the source code..." + colors.end)
     else:
         gdoc_token = html.split(trigger)[1][:100].split('"')[0]
-        print("Google Docs Token => {}".format(gdoc_token))
+        print(colors.info + " Google Docs Token => {}".format(gdoc_token) + colors.end)
 
     # Extracting Internal People API tokens
     internal_auth, internal_token = get_internal_tokens(driver, cookies, tmprinter)
-    print(f"Internal APIs Token => {internal_token}")
-    print(f"Internal APIs Authorization => {internal_auth}")
+    print(colors.info + f" Internal APIs Token => {internal_token}" + colors.end)
+    print(colors.info + f" Internal APIs Authorization => {internal_auth}" + colors.end)
 
     # Extracting Hangouts tokens
     auth_token, hangouts_token = get_hangouts_tokens(driver, cookies, tmprinter)
-    print(f"Hangouts Authorization => {auth_token}")
-    print(f"Hangouts Token => {hangouts_token}")
+    print(colors.info + f" Hangouts Authorization => {auth_token}" + colors.end)
+    print(colors.info + f" Hangouts Token => {hangouts_token}" + colors.end)
 
     save_tokens(auth_token, gdoc_token, hangouts_token, internal_token, internal_auth, cookies)

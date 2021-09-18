@@ -14,11 +14,9 @@ from PIL import Image
 
 from lib.GHunt import config
 from lib.GHunt.lib.utils import *
-from lib.GHunt.lib.banner import banner
 
 
 def doc_hunt(doc_link):
-    banner()
 
     tmprinter = TMPrinter()
 

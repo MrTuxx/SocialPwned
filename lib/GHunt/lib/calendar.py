@@ -7,6 +7,7 @@ import time
 import json
 from datetime     import datetime, timezone
 from urllib.parse import urlencode
+from core.colors import colors
 
 
 # assembling the json request url endpoint
@@ -35,7 +36,7 @@ def fetch(email, client, config):
         cookies = {"CONSENT": config.default_consent_cookie}
         client.cookies = cookies
     url_endpoint = f"https://calendar.google.com/calendar/u/0/embed?src={email}"
-    print("\nGoogle Calendar : " + url_endpoint)
+    print(colors.info + " Google Calendar : " + url_endpoint + colors.end)
     req = client.get(url_endpoint + "&hl=en")
     source = req.text
     try:

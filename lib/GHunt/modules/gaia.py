@@ -14,14 +14,12 @@ from PIL import Image
 from geopy.geocoders import Nominatim
 
 from lib.GHunt import config
-from lib.GHunt.lib.banner import banner
 import lib.GHunt.lib.gmaps as gmaps
 import lib.GHunt.lib.youtube as ytb
 from lib.GHunt.lib.utils import *
 
 
 def gaia_hunt(gaiaID):
-    banner()
 
     if not gaiaID:
         exit("Please give a valid GaiaID.\nExample : 113127526941309521065")

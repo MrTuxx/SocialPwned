@@ -11,7 +11,7 @@ from os.path import isfile
 import json
 import re
 from pprint import pprint
-
+from core.colors import colors
 
 class TMPrinter():
     def __init__(self):
@@ -45,7 +45,7 @@ def is_email_google_account(httpx_client, auth, cookies, email, hangouts_token):
     data = json.loads(req.text)
     #pprint(data); exit()
     if not "matches" in data:
-        exit("[-] This email address does not belong to a Google Account.")
+        exit(colors.bad + " This email address does not belong to a Google Account." + colors.end)
 
     return data
 

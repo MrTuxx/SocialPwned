@@ -14,22 +14,20 @@ from PIL import Image
 from geopy.geocoders import Nominatim
 
 from lib.GHunt import config
-from lib.GHunt.lib.banner import banner
 import lib.GHunt.lib.gmaps as gmaps
 import lib.GHunt.lib.youtube as ytb
 from lib.GHunt.lib.photos import gpics
 from lib.GHunt.lib.utils import *
 import lib.GHunt.lib.calendar as gcalendar
-
+from core.colors import colors
 
 def email_hunt(email):
-    banner()
 
     if not email:
-        exit("Please give a valid email.\nExample : larry@google.com")
+        exit(colors.bad + " Please give a valid email.\nExample : larry@google.com" + colors.end)
 
     if not isfile(config.data_path):
-        exit("Please generate cookies and tokens first, with the check_and_gen.py script.")
+        exit(colors.bad + " Please generate cookies and tokens first, with the check_and_gen.py script." + colors.end)
 
     hangouts_auth = ""
     hangouts_token = ""
@@ -52,11 +50,8 @@ def email_hunt(email):
                                    hangouts_token)
 
     is_within_docker = within_docker()
-    if is_within_docker:
-        print("[+] Docker detected, profile pictures will not be saved.")
-
     geolocator = Nominatim(user_agent="nominatim")
-    print(f"[+] {len(data['matches'])} account found !")
+    print(colors.good + f" {len(data['matches'])} account found !" + colors.end)
 
     for user in data["matches"]:
         print("\n------------------------------\n")
@@ -70,52 +65,45 @@ def email_hunt(email):
         name = account["name"]
         
         if name:
-            print(f"Name : {name}")
+            print(colors.info + f" Name : {name}" + colors.end)
         else:
             if "name" not in infos:
-                print("[-] Couldn't find name")
+                print(colors.info + " Couldn't find name" + colors.end)
             else:
                 for i in range(len(infos["name"])):
                     if 'displayName' in infos['name'][i].keys():
                         name = infos["name"][i]["displayName"]
-                        print(f"Name : {name}")
+                        print(colors.info + f" Name : {name}" + colors.end)
 
         # profile picture
         profile_pic_url = account["profile_pic_url"]
         req = client.get(profile_pic_url)
 
+        print(colors.good + f" Profile picture: {profile_pic_url}" + colors.end)
+
         profile_pic_img = Image.open(BytesIO(req.content))
         profile_pic_hash = image_hash(profile_pic_img)
         is_default_profile_pic = detect_default_profile_pic(profile_pic_hash)
-
-        if not is_default_profile_pic and not is_within_docker:
-            print("\n[+] Custom profile picture !")
-            print(f"=> {profile_pic_url}")
-            if config.write_profile_pic and not is_within_docker:
-                open(Path(config.profile_pics_dir) / f'{email}.jpg', 'wb').write(req.content)
-                print("Profile picture saved !")
-        else:
-            print("\n[-] Default profile picture")
 
         # last edit
         try:
             timestamp = int(infos["metadata"]["lastUpdateTimeMicros"][:-3])
             last_edit = datetime.utcfromtimestamp(timestamp).strftime("%Y/%m/%d %H:%M:%S (UTC)")
-            print(f"\nLast profile edit : {last_edit}")
+            print(colors.info + f" Last profile edit : {last_edit}" + colors.end)
         except KeyError:
             last_edit = None
-            print(f"\nLast profile edit : Not found")
-        print(f"\nEmail : {email}\nGoogle ID : {gaiaID}\n")
+            print(colors.info + f" Last profile edit : Not found" + colors.end)
+        print(colors.info + f" Email : {email}\n" + colors.info + f" Google ID : {gaiaID}" + colors.end)
 
         # is bot?
         if "extendedData" in infos:
             isBot = infos["extendedData"]["hangoutsExtendedData"]["isBot"]
             if isBot:
-                print("Hangouts Bot : Yes !")
+                print(colors.info + " Hangouts Bot : Yes !" + colors.end)
             else:
-                print("Hangouts Bot : No")
+                print(colors.info + " Hangouts Bot : No" + colors.end)
         else:
-            print("Hangouts Bot : Unknown")
+            print(colors.info + " Hangouts Bot : Unknown" + colors.end)
 
         # decide to check YouTube
         ytb_hunt = False
@@ -124,12 +112,12 @@ def email_hunt(email):
                         infos["inAppReachability"]]
             if name and (config.ytb_hunt_always or "youtube" in services):
                 ytb_hunt = True
-            print("\n[+] Activated Google services :")
+            print(colors.good + " Activated Google services :" + colors.end)
             print('\n'.join(["- " + x.capitalize() for x in services]))
 
         except KeyError:
             ytb_hunt = True
-            print("\n[-] Unable to fetch connected Google services.")
+            print(colors.info + " Unable to fetch connected Google services." + colors.end)
 
         # check YouTube
         if name and ytb_hunt:
@@ -137,21 +125,21 @@ def email_hunt(email):
             data = ytb.get_channels(client, name, config.data_path,
                                    config.gdocs_public_doc)
             if not data:
-                print("\n[-] YouTube channel not found.")
+                print(colors.info + " YouTube channel not found." + colors.end)
             else:
                 confidence, channels = ytb.get_confidence(data, name, profile_pic_hash)
                 
                 if confidence:
-                    print(f"\n[+] YouTube channel (confidence => {confidence}%) :")
+                    print(colors.good + f" YouTube channel (confidence => {confidence}%) :" + colors.end)
                     for channel in channels:
                         print(f"- [{channel['name']}] {channel['profile_url']}")
                     possible_usernames = ytb.extract_usernames(channels)
                     if possible_usernames:
-                        print("\n[+] Possible usernames found :")
+                        print(colors.good + " Possible usernames found :" + colors.end)
                         for username in possible_usernames:
                             print(f"- {username}")
                 else:
-                    print("\n[-] YouTube channel not found.")
+                    print(colors.info + " YouTube channel not found." + colors.end)
 
         # TODO: return gpics function output here
         #gpics(gaiaID, client, cookies, config.headers, config.regexs["albums"], config.regexs["photos"],
@@ -162,7 +150,7 @@ def email_hunt(email):
 
         if reviews:
             confidence, locations = gmaps.get_confidence(geolocator, reviews, config.gmaps_radius)
-            print(f"\n[+] Probable location (confidence => {confidence}) :")
+            print(colors.good + f" Probable location (confidence => {confidence}) :" + colors.end)
 
             loc_names = []
             for loc in locations:
@@ -178,12 +166,12 @@ def email_hunt(email):
        # Google Calendar
         calendar_response = gcalendar.fetch(email, client, config)
         if calendar_response:
-            print("[+] Public Google Calendar found !")
+            print(colors.good + " Public Google Calendar found !" + colors.end)
             events = calendar_response["events"]
             if events:
                 gcalendar.out(events)
             else:
-                print("=> No recent events found.")
+                print(colors.info + " No recent events found." + colors.end)
         else:
-            print("[-] No public Google Calendar.")
+            print(colors.info + " No public Google Calendar." + colors.end)
         

@@ -10,6 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from seleniumwire import webdriver
+from core.colors import colors
 
 from lib.GHunt.lib.utils import *
 
@@ -39,9 +40,9 @@ def scrape(gaiaID, client, cookies, config, headers, regex_rev_by_id, is_headles
     tmprinter = TMPrinter()
 
     base_url = f"https://www.google.com/maps/contrib/{gaiaID}/reviews?hl=en"
-    print(f"\nGoogle Maps : {base_url.replace('?hl=en', '')}")
+    print(colors.good + f" Google Maps : {base_url.replace('?hl=en', '')}" + colors.end)
 
-    tmprinter.out("Initial request...")
+    tmprinter.out(colors.info +" Initial request..." + colors.end)
 
     req = client.get(base_url)
     source = req.text
@@ -50,7 +51,7 @@ def scrape(gaiaID, client, cookies, config, headers, regex_rev_by_id, is_headles
 
     if "/maps/reviews/data" not in data:
         tmprinter.out("")
-        print("[-] No reviews")
+        print(colors.info +" No reviews" + colors.end)
         return False
 
     chrome_options = get_chrome_options_args(is_headless)
@@ -58,14 +59,14 @@ def scrape(gaiaID, client, cookies, config, headers, regex_rev_by_id, is_headles
         'connection_timeout': None  # Never timeout, otherwise it floods errors
     }
 
-    tmprinter.out("Starting browser...")
+    tmprinter.out(colors.info +" Starting browser..." + colors.end)
 
     driverpath = get_driverpath()
     driver = webdriver.Chrome(executable_path=driverpath, seleniumwire_options=options, chrome_options=chrome_options)
     driver.header_overrides = headers
     wait = WebDriverWait(driver, 15)
 
-    tmprinter.out("Setting cookies...")
+    tmprinter.out(colors.info + " Setting cookies..." + colors.end)
     driver.get("https://www.google.com/robots.txt")
     
     if not config.gmaps_cookies:
@@ -73,7 +74,7 @@ def scrape(gaiaID, client, cookies, config, headers, regex_rev_by_id, is_headles
     for k, v in cookies.items():
         driver.add_cookie({'name': k, 'value': v})
 
-    tmprinter.out("Fetching reviews page...")
+    tmprinter.out(colors.info + " Fetching reviews page..." + colors.end)
     driver.get(base_url)
 
     wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div.section-scrollbox')))
@@ -86,29 +87,29 @@ def scrape(gaiaID, client, cookies, config, headers, regex_rev_by_id, is_headles
         return False
 
     tmprinter.clear()
-    print(f"[+] {scroll_max} reviews found !")
+    print(colors.good +f" {scroll_max} reviews found !" + colors.end)
 
     timeout = scroll_max * 1.25
     timeout_start = time.time()
     reviews_elements = driver.find_elements_by_xpath('//div[@data-review-id][@aria-label]')
-    tmprinter.out(f"Fetching reviews... ({len(reviews_elements)}/{scroll_max})")
+    tmprinter.out(colors.info + f" Fetching reviews... ({len(reviews_elements)}/{scroll_max})" + colors.end)
     while len(reviews_elements) < scroll_max:
         driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scrollbox)
         reviews_elements = driver.find_elements_by_xpath('//div[@data-review-id][@aria-label]')
-        tmprinter.out(f"Fetching reviews... ({len(reviews_elements)}/{scroll_max})")
+        tmprinter.out(colors.info + f" Fetching reviews... ({len(reviews_elements)}/{scroll_max})" + colors.end)
         if time.time() > timeout_start + timeout:
-            tmprinter.out(f"Timeout while fetching reviews !")
+            tmprinter.out(colors.info + f" Timeout while fetching reviews !" + colors.end)
             break
 
-    tmprinter.out("Fetching internal requests history...")
+    tmprinter.out(colors.info + " Fetching internal requests history..." + colors.end)
     requests = [r.url for r in driver.requests if "locationhistory" in r.url]
-    tmprinter.out(f"Fetching internal requests... (0/{len(requests)})")
+    tmprinter.out(colors.info + f" Fetching internal requests... (0/{len(requests)})" + colors.end)
     for nb, load in enumerate(requests):
         req = client.get(load)
         data += req.text.replace('\n', '')
-        tmprinter.out(f"Fetching internal requests... ({nb + 1}/{len(requests)})")
+        tmprinter.out(colors.info + f" Fetching internal requests... ({nb + 1}/{len(requests)})" + colors.end)
 
-    tmprinter.out(f"Fetching reviews location... (0/{len(reviews_elements)})")
+    tmprinter.out(colors.info + f" Fetching reviews location... (0/{len(reviews_elements)})"+ colors.end)
     reviews = []
     rating = 0
     for nb, review in enumerate(reviews_elements):
@@ -121,11 +122,11 @@ def scrape(gaiaID, client, cookies, config, headers, regex_rev_by_id, is_headles
         rating += int(stars.get_attribute("aria-label").strip().split()[0])
         date = get_datetime(stars.find_element_by_xpath("following-sibling::span").text)
         reviews.append({"location": location, "date": date})
-        tmprinter.out(f"Fetching reviews location... ({nb + 1}/{len(reviews_elements)})")
+        tmprinter.out(colors.info + f" Fetching reviews location... ({nb + 1}/{len(reviews_elements)})" + colors.end)
 
     rating_avg = rating / len(reviews)
     tmprinter.clear()
-    print(f"[+] Average rating : {int(rating_avg) if int(rating_avg) / round(rating_avg, 1) == 1 else round(rating_avg, 1)}/5 stars !")
+    print(colors.good + f" Average rating : {int(rating_avg) if int(rating_avg) / round(rating_avg, 1) == 1 else round(rating_avg, 1)}/5 stars !" + colors.end)
     # 4.9 => 4.9, 5.0 => 5, we don't show the 0
     return reviews
 
@@ -164,7 +165,7 @@ def get_confidence(geolocator, data, gmaps_radius):
     radius = gmaps_radius
 
     locations = {}
-    tmprinter.out(f"Calculation of the distance of each review...")
+    tmprinter.out(colors.info + f" Calculation of the distance of each review..." + colors.end)
     for nb, review in enumerate(data):
         hash = hashlib.md5(str(review).encode()).hexdigest()
         if hash not in locations:
@@ -181,14 +182,14 @@ def get_confidence(geolocator, data, gmaps_radius):
         maxdate = max(locations[hash]["dates"])
         mindate = min(locations[hash]["dates"])
         locations[hash]["range"] = maxdate - mindate
-        tmprinter.out(f"Calculation of the distance of each review ({nb}/{len(data)})...")
+        tmprinter.out(colors.info + f" Calculation of the distance of each review ({nb}/{len(data)})..." + colors.end)
 
     tmprinter.out("")
 
     locations = {k: v for k, v in
                  sorted(locations.items(), key=lambda k: len(k[1]["locations"]), reverse=True)}  # We sort it
 
-    tmprinter.out("Identification of redundant areas...")
+    tmprinter.out(colors.info + " Identification of redundant areas..." + colors.end)
     to_del = []
     for hash in locations:
         if hash in to_del:
@@ -201,7 +202,7 @@ def get_confidence(geolocator, data, gmaps_radius):
     for hash in to_del:
         del locations[hash]
 
-    tmprinter.out("Calculating confidence...")
+    tmprinter.out(colors.info + " Calculating confidence..." + colors.end)
     maxrange = max([locations[hash]["range"] for hash in locations])
     maxlen = max([len(locations[hash]["locations"]) for hash in locations])
     minreq = 3
