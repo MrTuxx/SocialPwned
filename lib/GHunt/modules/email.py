@@ -48,6 +48,8 @@ def email_hunt(email):
 
     data = is_email_google_account(client, hangouts_auth, cookies, email,
                                    hangouts_token)
+    if data is False:
+        return False
 
     is_within_docker = within_docker()
     geolocator = Nominatim(user_agent="nominatim")
@@ -141,11 +143,6 @@ def email_hunt(email):
                 else:
                     print(colors.info + " YouTube channel not found." + colors.end)
 
-        # TODO: return gpics function output here
-        #gpics(gaiaID, client, cookies, config.headers, config.regexs["albums"], config.regexs["photos"],
-        #      config.headless)
-
-        # reviews
         reviews = gmaps.scrape(gaiaID, client, cookies, config, config.headers, config.regexs["review_loc_by_id"], config.headless)
 
         if reviews:

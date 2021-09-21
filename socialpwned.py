@@ -47,7 +47,8 @@ if __name__ == "__main__":
     twitter.add_argument("--followers-tw",required=False, action="store_true", help="Scrape a person's followers.")
     twitter.add_argument("--followings-tw",required=False, action="store_true", help="Scrape a person's follows.")
     ghunt = parser.add_argument_group("GHunt Arguments","Specific arguments for Ghunt")
-    ghunt.add_argument("--ghunt",required=False, action="store_true", help="You must use this flag if you want to use the GHunt functions")
+    ghunt.add_argument("--ghunt",required=False, action="store_true", help="You must use this flag if you want to use the GHunt email module")
+    ghunt.add_argument("--email-gh",required=False, action="store",help="Extract information from a specific email",metavar="email@gmail.com")
     args = parser.parse_args()
 
     run(args)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import json
+import json, logging, sys
 from time import time
 from os.path import isfile
 from pathlib import Path
@@ -14,6 +14,8 @@ from lib.GHunt import config
 from lib.GHunt.lib.utils import *
 from core.colors import colors
 
+#Disable all logs
+logging.disable(sys.maxsize)
 
 # We change the current working directory to allow using GHunt from anywhere
 #os.chdir(Path(__file__).parents[0])
@@ -174,9 +176,9 @@ def check_and_gen(ghunt_SID,ghunt_SSID,ghunt_APISID,ghunt_SAPISID,ghunt_HSID):
     # We first initialize the browser driver
     chrome_options = get_chrome_options_args(config.headless)
     options = {
-        'connection_timeout': None  # Never timeout, otherwise it floods errors
+        'connection_timeout': None,
+        'verify_ssl': False
     }
-
     tmprinter.out(colors.info + " Starting browser..." + colors.end)
     driver = webdriver.Chrome(
         executable_path=driverpath, seleniumwire_options=options,

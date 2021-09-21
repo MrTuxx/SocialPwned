@@ -45,7 +45,8 @@ def is_email_google_account(httpx_client, auth, cookies, email, hangouts_token):
     data = json.loads(req.text)
     #pprint(data); exit()
     if not "matches" in data:
-        exit(colors.bad + " This email address does not belong to a Google Account." + colors.end)
+        print(colors.bad + " This email address does not belong to a Google Account." + colors.end)
+        return False
 
     return data
 
