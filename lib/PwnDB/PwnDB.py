@@ -119,25 +119,7 @@ def findLeak(emails,tor_proxy):
 
     return leaks
 
-def saveResultsPwnDB(results):
-    with open("PwnDBResults.txt", "a") as resultFile:
-        for result in results:
-            leak = result.get("leak")
-            if len(leak) >= 1:
-                print(colors.good + " User: " + colors.V + result.get("user") + colors.B + " Email: " + colors.V + result.get("email") + colors.V + " Have Leaks " + colors.end)
-                resultFile.write("User: " + result.get("user") + " Email: " + result.get("email")+"\n")
-                for i in range (len(leak)-1):
-                    print("\t" + colors.good + " Leaks found in PwnDB: " + colors.V + str(leak[i]) + colors.end)
-                    resultFile.write("\t" + "Leaks found in PwnDB: " + str(leak[i]) + "\n")
 
-                haveIBeenPwnedInfo = leak[-1]
-                print("\t\t" + colors.info + " Information found in HaveIBeenPwned from pwned websites" + colors.end)
-                for infoPwned  in haveIBeenPwnedInfo:
-                    print("\t\t" + colors.good + " " + colors.V + infoPwned + colors.end)
-                    resultFile.write("\t\t" + infoPwned + "\n")
-            else:
-                print(colors.good + " User: " + colors.W + result.get("user") + colors.B + " Email: " + colors.W + result.get("email") + colors.B + " Not Have Leaks in PwnDB" + colors.end)
-    resultFile.close()
 
 
 

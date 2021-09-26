@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os, sys, json
+import os, sys, json, datetime
 from lib.InstagramAPI import InstagramAPI
 from lib.LinkedInAPI import Linkedin
 from lib.PwnDB import PwnDB
@@ -8,22 +8,8 @@ from core import instagram
 from core import linkedin
 from core import twitter
 from core import ghunt
+from core import output
 from core.colors import colors
-
-def saveResults(file,results):
-    print(colors.info + " Writing the file..." + colors.end)
-    content = ""
-    with open(str(file), "r") as resultFile:
-        content = resultFile.read()
-    resultFile.close()
-    with open(str(file), "a") as resultFile:
-        for result in results:
-            target = json.loads(result)
-            if target['email'] not in content:
-                resultFile.write(target['user']+":"+target['userID']+":"+target['email']+"\n")
-    resultFile.close()
-    print(colors.good + " Correctly saved information...\n" + colors.end)
-
 
 def readCredentials(credentialsFile):
     try:
@@ -86,7 +72,7 @@ def instagramParameters(args,ig_username,ig_password):
     return results
     
 
-def linkedinParameters(args,in_email,in_password):
+def linkedinParameters(args,in_email,in_password,out_dir):
     
     results = []
     api = Linkedin(in_email, in_password)
@@ -98,16 +84,17 @@ def linkedinParameters(args,in_email,in_password):
             users = []
             if args.employees:
                 users = linkedin.getEmployeesFromCurrentCompany(api,args.company)
+                output.linkedin2usernames(users,out_dir)
                 results.extend(linkedin.getEmailsFromUsers(api,users))
             if args.employees and args.add_contacts:
                 linkedin.sendContactRequestAListOfUsers(api,users)
-
 
         if args.search_companies:
             companies = linkedin.searchCompanies(api,args.search_companies)
             users = []
             if args.employees:
                 users = linkedin.getCompanyEmployees(api,companies)
+                output.linkedin2usernames(users,out_dir)
                 results.extend(linkedin.getEmailsFromUsers(api, users))
             if args.add_contacts:
                 linkedin.sendContactRequestAListOfUsers(api,users)
@@ -196,16 +183,17 @@ def run(args):
 
     results = []
     creds = ''
+    session = 'session_' + datetime.datetime.now().strftime('%Y_%m_%d_%H%M%S')
+    out_dir = 'output/' + session
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+
     if args.credentials and os.path.isfile(args.credentials) and os.access(args.credentials, os.R_OK):
         creds = readCredentials(args.credentials)
     else:
         print(colors.bad + " The file can't be accessed" + colors.end)
         sys.exit()
 
-    if args.output and not os.path.isfile(args.output):
-        print(colors.bad + " The file doesn't exist" + colors.end)
-        sys.exit()
-    
     if args.pwndb:
         status = os.system('service tor status > /dev/null')
         if status != 0:
@@ -220,7 +208,7 @@ def run(args):
     if args.linkedin:
         in_email = creds.get("linkedin").get("email")
         in_password = creds.get("linkedin").get("password")
-        results.extend(linkedinParameters(args,in_email,in_password))
+        results.extend(linkedinParameters(args,in_email,in_password,out_dir))
     
     if args.twitter:
         results.extend(twitterParameters(args))
@@ -233,14 +221,11 @@ def run(args):
         ghunt_HSID = creds.get("ghunt").get("HSID")
         ghuntParameters(args,ghunt_SID,ghunt_SSID,ghunt_APISID,ghunt_SAPISID,ghunt_HSID,results)
 
-    if args.output:
-        saveResults(args.output,results)
-
-    if args.pwndb and results != [] and results != False:
-        juicyInformation = PwnDB.findLeak(results,args.tor_proxy)
-        PwnDB.saveResultsPwnDB(juicyInformation)
-    elif results == []:
-        print(colors.info + " No emails were found to search." + colors.end)
+    if results != [] and results != False:
+        output.saveEmails(out_dir,results)
+        if args.pwndb:
+            juicyInformation = PwnDB.findLeak(results,args.tor_proxy)
+            output.saveResultsPwnDB(out_dir,juicyInformation)
 
 
 

@@ -180,11 +180,13 @@ class Linkedin(object):
         for item in data:
             if "publicIdentifier" not in item:
                 continue
+            #print(item)
             results.append(
                 {
                     "urn_id": get_id_from_urn(item.get("targetUrn")),
                     "distance": item.get("memberDistance", {}).get("value"),
                     "public_id": item.get("publicIdentifier"),
+                    "name": item.get("title", {}).get("text")
                 }
             )
 

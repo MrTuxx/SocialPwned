@@ -115,7 +115,10 @@ def email_hunt(email):
             if name and (config.ytb_hunt_always or "youtube" in services):
                 ytb_hunt = True
             print(colors.good + " Activated Google services :" + colors.end)
-            print('\n'.join(["- " + x.capitalize() for x in services]))
+            try:
+                print('\n'.join(["- " + x.capitalize() for x in services]))
+            except Exception as e:
+                print("ERROR")
 
         except KeyError:
             ytb_hunt = True
