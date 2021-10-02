@@ -24,7 +24,7 @@ def readCredentials(credentialsFile):
 
     return data
 
-def instagramParameters(args,ig_username,ig_password):
+def instagramParameters(args,ig_username,ig_password,out_dir):
     results = []
     api = InstagramAPI(ig_username,ig_password)
 
@@ -50,6 +50,9 @@ def instagramParameters(args,ig_username,ig_password):
                     followers = instagram.getUserFollowers(api,args.target_ig)
                     followings =  instagram.getUserFollowings(api,args.target_ig)
                     results.extend(instagram.sortContacts(followers,followings))
+                if results == []:
+                    print(colors.info + " No public emails found :(" + colors.end)
+
               
         if args.location:
             results.extend(instagram.getUsersFromLocation(api,args.location))
@@ -69,6 +72,8 @@ def instagramParameters(args,ig_username,ig_password):
             results.extend(instagram.sortContacts(followers,followings))  
     else:
         print(colors.bad + " Can't Login to Instagram!" + colors.end)
+    
+    output.saveResultsInstagram(out_dir,results)
 
     return results
     
@@ -92,13 +97,18 @@ def linkedinParameters(args,in_email,in_password,out_dir):
 
         if args.search_companies:
             companies = linkedin.searchCompanies(api,args.search_companies)
-            users = []
-            if args.employees:
-                users = linkedin.getCompanyEmployees(api,companies)
-                output.linkedin2usernames(users,out_dir)
-                results.extend(linkedin.getEmailsFromUsers(api, users))
-            if args.add_contacts:
-                linkedin.sendContactRequestAListOfUsers(api,users)
+            """
+            Uncomment if you want to search for all employees in a search. 
+            But it fails due to the amount of requests and linkedin blocks. 
+            It is better to search for a company first and get its employees later.
+            """
+            # users = []
+            # if args.employees:
+            #     users = linkedin.getCompanyEmployees(api,companies)
+            #     output.linkedin2usernames(users,out_dir)
+            #     results.extend(linkedin.getEmailsFromUsers(api, users))
+            # if args.add_contacts:
+            #     linkedin.sendContactRequestAListOfUsers(api,users)
 
         if args.my_contacts:
             results.extend(linkedin.getEmailsFromUsers(api,linkedin.getMyContacts(api)))
@@ -129,7 +139,7 @@ def linkedinParameters(args,in_email,in_password,out_dir):
 
     return results
 
-def twitterParameters(args):
+def twitterParameters(args,out_dir):
     results = []
     print(colors.good + " Using Twint!\n" + colors.end)
 
@@ -168,6 +178,7 @@ def twitterParameters(args):
             args.year,
             args.since,
             args.until))
+    output.saveResultsTwitter(out_dir,results)
 
     return results
 
@@ -221,7 +232,7 @@ def run(args):
     if args.instagram:
         ig_username = creds.get("instagram").get("username")
         ig_password = creds.get("instagram").get("password")
-        results.extend(instagramParameters(args,ig_username,ig_password))
+        results.extend(instagramParameters(args,ig_username,ig_password,out_dir))
 
     if args.linkedin:
         in_email = creds.get("linkedin").get("email")
@@ -229,7 +240,7 @@ def run(args):
         results.extend(linkedinParameters(args,in_email,in_password,out_dir))
     
     if args.twitter:
-        results.extend(twitterParameters(args))
+        results.extend(twitterParameters(args,out_dir))
     
     if args.ghunt:
         ghunt_SID = creds.get("ghunt").get("SID")

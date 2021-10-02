@@ -99,7 +99,7 @@ def getUserInformation(api,target):
 
 def getUsersOfTheSearch(api,query):
 
-    print(colors.info + "Searching users..." + colors.end)
+    print(colors.info + " Searching users..." + colors.end)
     api.searchUsers(query)
     users = api.LastJson["users"]
     results = []

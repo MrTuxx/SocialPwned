@@ -167,3 +167,33 @@ def saveResultsDehashed(out_dir,results):
 
     resultFile.close()
     raw_file.close()
+
+def saveResultsInstagram(out_dir,results):
+
+    out_dir = out_dir + '/instagram'
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+    
+    file = out_dir + '/socialpwned_instagram.txt'
+    with open(file, "w") as resultFile:
+        for result in results:
+            item = json.loads(result)
+            user = item.get("user")
+            email = item.get("email")
+            resultFile.write(user + ":" + email + "\n")
+    resultFile.close()
+
+def saveResultsTwitter(out_dir,results):
+
+    out_dir = out_dir + '/twitter'
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+    
+    file = out_dir + '/socialpwned_twitter.txt'
+    with open(file, "w") as resultFile:
+        for result in results:
+            item = json.loads(result)
+            user = item.get("user")
+            email = item.get("email")
+            resultFile.write(user + ":" + email + "\n")
+    resultFile.close()
