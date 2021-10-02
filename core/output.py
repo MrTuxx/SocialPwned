@@ -138,3 +138,32 @@ def saveResultsPwnDB(out_dir,results):
     resultFile.close()
     passwords_file.close()
     pwndb_file.close()
+
+def saveResultsDehashed(out_dir,results):
+
+    out_dir = out_dir + '/dehashed'
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+    
+    file = out_dir + '/socialpwned_dehashed.txt'
+    raw_file = open(out_dir + '/raw_dehashed.txt', 'w')
+
+    with open(file, "w") as resultFile:
+        for result in results:
+            for item in result:
+                email = item.get("email")
+                password = item.get("password")
+                if password =='':
+                    password = "Not Found"
+                hashed_password = item.get("hashed_password")
+                if hashed_password == '':
+                    hashed_password = "Not Found"
+                database_name = item.get("database_name")
+                if database_name == '':
+                    database_name = "Not Found"
+                print(colors.good + " Email: " + colors.V + email + colors.B + " Password: " + colors.V + password + colors.B + " Hashed Password: " + colors.V + hashed_password + colors.B + " Source: " + colors.V + database_name + colors.end)
+                resultFile.write(email + ":" + password + ":" + hashed_password + "\n")
+            raw_file.write(str(result) + "\n")
+
+    resultFile.close()
+    raw_file.close()

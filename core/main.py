@@ -4,6 +4,7 @@ import os, sys, json, datetime
 from lib.InstagramAPI import InstagramAPI
 from lib.LinkedInAPI import Linkedin
 from lib.PwnDB import PwnDB
+from lib.Dehashed import DehashedAPI
 from core import instagram
 from core import linkedin
 from core import twitter
@@ -177,8 +178,25 @@ def ghuntParameters(args,ghunt_SID,ghunt_SSID,ghunt_APISID,ghunt_SAPISID,ghunt_H
     if args.email_gh:
         ghunt.emailHunt(args.email_gh)
     if results != []:
-        ghunt.emailsListHunt(results) 
-        
+        ghunt.emailsListHunt(results)
+    else:
+        print(colors.bad + " No emails for Ghunt" + colors.end)
+
+def dehashedParameters(args,dehashed_email,dehashed_apikey,results,out_dir):
+    print(colors.good + " Using Dehashed!\n" + colors.end)
+
+    dehashed_results = []
+
+    if results != []:
+        dehashed_results = DehashedAPI.dehashedRequest(dehashed_email,dehashed_apikey,results)
+    else:
+        print(colors.bad + " No emails for Ghunt" + colors.end)
+
+    if args.email_dh:
+        dehashed_results.append(DehashedAPI.dehashedSearch(dehashed_email,dehashed_apikey,email=args.email_dh))
+
+    output.saveResultsDehashed(out_dir,dehashed_results)
+
 def run(args):
 
     results = []
@@ -221,12 +239,14 @@ def run(args):
         ghunt_HSID = creds.get("ghunt").get("HSID")
         ghuntParameters(args,ghunt_SID,ghunt_SSID,ghunt_APISID,ghunt_SAPISID,ghunt_HSID,results)
 
+    if args.dehashed:
+        dehashed_email = creds.get("dehashed").get("email")
+        dehashed_apikey = creds.get("dehashed").get("apikey")
+        dehashedParameters(args,dehashed_email,dehashed_apikey,results,out_dir)
+
     if results != [] and results != False:
         output.saveEmails(out_dir,results)
         if args.pwndb:
-            juicyInformation = PwnDB.findLeak(results,args.tor_proxy)
-            output.saveResultsPwnDB(out_dir,juicyInformation)
-
-
-
-
+            print(colors.good + " Using PwnDB!\n" + colors.end)
+            pwndb_results = PwnDB.findLeak(results,args.tor_proxy)
+            output.saveResultsPwnDB(out_dir,pwndb_results)

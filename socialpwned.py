@@ -10,7 +10,6 @@ if __name__ == "__main__":
     general = parser.add_argument_group("General Arguments","General arguments")
     general.add_argument("--credentials",required=True, action="store", help="Credentials in a JSON file. If you use instagram you must enter the username. If you use LinkedIn you must enter the email.")
     general.add_argument("--pwndb",required=False, action="store_true", help="Searches all the emails published by users in PwnDB and stores the results in the file PwnDBResults.txt")
-    general.add_argument("--output",required=False, action="store", help="Save users, users ID and emails found in a file",metavar="FILE")
     general.add_argument("--tor-proxy",default='127.0.0.1:9050', type=str, help="Set Tor proxy (default: 127.0.0.1:9050)",metavar="PROXY")
     instagram = parser.add_argument_group("Instagram Arguments","Specific arguments for Instagram")
     instagram.add_argument("--instagram",required=False, action="store_true", help="You must use this flag if you want to use the Instagram functions")
@@ -49,6 +48,9 @@ if __name__ == "__main__":
     ghunt = parser.add_argument_group("GHunt Arguments","Specific arguments for Ghunt")
     ghunt.add_argument("--ghunt",required=False, action="store_true", help="You must use this flag if you want to use the GHunt email module")
     ghunt.add_argument("--email-gh",required=False, action="store",help="Extract information from a specific email",metavar="email@gmail.com")
+    dehashed = parser.add_argument_group("Dehashed Arguments","Specific arguments for Dehashed API")
+    dehashed.add_argument("--dehashed",required=False, action="store_true", help="You must use this flag if you want to use the GHunt email module")
+    dehashed.add_argument("--email-dh",required=False, action="store",help="Extract information from a specific email",metavar="email@gmail.com")
     args = parser.parse_args()
 
     run(args)
