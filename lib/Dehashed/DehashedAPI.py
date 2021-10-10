@@ -3,7 +3,7 @@
 
 import requests, json
 from core.colors import colors
-
+from core.socialpwned import SocialPwned
 
 def dehashedRequest(dehashed_email,dehashed_apikey,emails):
 
@@ -18,8 +18,19 @@ def dehashedRequest(dehashed_email,dehashed_apikey,emails):
         result = dehashedSearch(dehashed_email,dehashed_apikey,email=mail)
         if result != False and result != None:
             results.append(result)
-
+            if SocialPwned.updateLeaksDehashed(mail,result) == False:
+                # This case should never occur, because if we have email, we have id
+                SocialPwned(mail,name = "",linkedin = {},instagram = {},twitter = {},leaks = {"pwndb":[],"dehashed":result,"ghunt":{}})
     return results
+
+def singleDehashedEmailSearch(dehashed_email,dehashed_apikey,email):
+    print(colors.info + " Searching: " + email + colors.end)
+    result = dehashedSearch(dehashed_email,dehashed_apikey,email)
+    if result != False and result != None:
+        if SocialPwned.updateLeaksDehashed(email,result) == False:
+            # This case should never occur, because if we have email, we have id
+            SocialPwned(email,name = "",linkedin = {},instagram = {},twitter = {},leaks = {"pwndb":[],"dehashed":result,"ghunt":{}})
+    return result
 
 def dehashedSearch(dehashed_email,dehashed_apikey,email=None,phone=None,username=None,name=None):
 

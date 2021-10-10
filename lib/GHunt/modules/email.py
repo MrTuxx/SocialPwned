@@ -20,8 +20,11 @@ from lib.GHunt.lib.photos import gpics
 from lib.GHunt.lib.utils import *
 import lib.GHunt.lib.calendar as gcalendar
 from core.colors import colors
+from core import output
 
 def email_hunt(email):
+
+    result = {}
 
     if not email:
         exit(colors.bad + " Please give a valid email.\nExample : larry@google.com" + colors.end)
@@ -68,6 +71,7 @@ def email_hunt(email):
         
         if name:
             print(colors.info + f" Name : {name}" + colors.end)
+            result['name'] = output.clean_name(name)
         else:
             if "name" not in infos:
                 print(colors.info + " Couldn't find name" + colors.end)
@@ -82,6 +86,7 @@ def email_hunt(email):
         req = client.get(profile_pic_url)
 
         print(colors.good + f" Profile picture: {profile_pic_url}" + colors.end)
+        result['naprofile_pic_url'] = profile_pic_url
 
         profile_pic_img = Image.open(BytesIO(req.content))
         profile_pic_hash = image_hash(profile_pic_img)
@@ -96,6 +101,8 @@ def email_hunt(email):
             last_edit = None
             print(colors.info + f" Last profile edit : Not found" + colors.end)
         print(colors.info + f" Email : {email}\n" + colors.info + f" Google ID : {gaiaID}" + colors.end)
+        result['email'] = email
+        result['googleID'] = gaiaID
 
         # is bot?
         if "extendedData" in infos:
@@ -122,7 +129,8 @@ def email_hunt(email):
 
         except KeyError:
             ytb_hunt = True
-            print(colors.info + " Unable to fetch connected Google services." + colors.end)
+            print(colors.bad + " Unable to fetch connected Google services." + colors.end)
+            return result
 
         # check YouTube
         if name and ytb_hunt:
@@ -146,7 +154,11 @@ def email_hunt(email):
                 else:
                     print(colors.info + " YouTube channel not found." + colors.end)
 
-        reviews = gmaps.scrape(gaiaID, client, cookies, config, config.headers, config.regexs["review_loc_by_id"], config.headless)
+        scrape_result = gmaps.scrape(gaiaID, client, cookies, config, config.headers, config.regexs["review_loc_by_id"], config.headless)
+        reviews = False
+        if scrape_result != False:
+            reviews = scrape_result["reviews"]
+            result['reviews_url'] = scrape_result["reviews_url"]
 
         if reviews:
             confidence, locations = gmaps.get_confidence(geolocator, reviews, config.gmaps_radius)
@@ -159,19 +171,23 @@ def email_hunt(email):
                 )
 
             loc_names = set(loc_names)  # delete duplicates
+            loc_json = []
             for loc in loc_names:
                 print(loc)
-        
+                loc_json.append(output.clean_name(loc))
+            result['location'] = loc_json
         
        # Google Calendar
         calendar_response = gcalendar.fetch(email, client, config)
         if calendar_response:
             print(colors.good + " Public Google Calendar found !" + colors.end)
             events = calendar_response["events"]
+            result = calendar_response["url_endpoint"]
             if events:
                 gcalendar.out(events)
             else:
                 print(colors.info + " No recent events found." + colors.end)
         else:
             print(colors.info + " No public Google Calendar." + colors.end)
+    return result
         

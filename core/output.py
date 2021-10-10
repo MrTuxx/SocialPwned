@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys, json, time, re, os
 from core.colors import colors
+from core.socialpwned import SocialPwned
 
 def linkedin2usernames(users,out_dir):
 
@@ -25,16 +26,21 @@ def remove_accents(raw_text):
     raw_text = re.sub(u"[ß]", 'ss', raw_text)
     raw_text = re.sub(u"[ñ]", 'n', raw_text)
     return raw_text
+
+def clean_name(name):
+
+    allowed_chars = re.compile('[^a-zA-Z -]')
+    name = name.lower()
+    name = remove_accents(name)
+    name = allowed_chars.sub('', name)
+    name = re.sub(r'\s+', ' ', name).strip()
+    return name
         
 def clean_names(raw_list):
 
     clean_list = []
-    allowed_chars = re.compile('[^a-zA-Z -]')
     for name in raw_list:
-        name = name.lower()
-        name = remove_accents(name)
-        name = allowed_chars.sub('', name)
-        name = re.sub(r'\s+', ' ', name).strip()
+        name = clean_name(name)
         if name and name not in clean_list:
             clean_list.append(name)
     return clean_list
@@ -113,6 +119,7 @@ def saveResultsPwnDB(out_dir,results):
     pwndb_file = open(out_dir + '/pwndb.txt', 'w')
     
     with open(file, "w") as resultFile:
+        socialpwned_json = []
         for result in results:
             leak = result.get("leak")
             if len(leak) >= 1:
@@ -121,6 +128,7 @@ def saveResultsPwnDB(out_dir,results):
                 for i in range (len(leak)-1):
                     print("\t" + colors.good + " Leaks found in PwnDB: " + colors.V + str(leak[i]) + colors.end)
                     resultFile.write("\t" + "Leaks found in PwnDB: " + str(leak[i]) + "\n")
+                    socialpwned_json.append(json.loads(leak[i]))
                     
                     pwndb = json.loads(leak[i])
                     password_pwndb = pwndb.get("password")
@@ -133,8 +141,12 @@ def saveResultsPwnDB(out_dir,results):
                 for infoPwned  in haveIBeenPwnedInfo:
                     print("\t\t" + colors.good + " " + colors.V + infoPwned + colors.end)
                     resultFile.write("\t\t" + infoPwned + "\n")
+                    socialpwned_json.append(json.loads(infoPwned))
+                if SocialPwned.updateLeaksPwnDB(result.get("email"),socialpwned_json) == False:
+                    # This case should never occur, because if we have email, we have id
+                    SocialPwned(email,name = "",linkedin = {},instagram = {},twitter = {},leaks = {"pwndb":socialpwned_json,"dehashed":[],"ghunt":{}})
             else:
-                print(colors.good + " User: " + colors.W + result.get("user") + colors.B + " Email: " + colors.W + result.get("email") + colors.B + " Not Have Leaks in PwnDB" + colors.end)
+                print(colors.good + " User: " + colors.W + result.get("user") + colors.B + " Email: " + colors.W + result.get("email") + colors.B + " Not Have Leaks in PwnDB" + colors.end)   
     resultFile.close()
     passwords_file.close()
     pwndb_file.close()

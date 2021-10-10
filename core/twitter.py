@@ -3,7 +3,7 @@
 import json, re
 from core.colors import colors
 from lib.TwitterAPI import Twitter
-
+from core.socialpwned import SocialPwned
 
 def getTweetEmailsFromHashtag(query,limit,year,since,until):
     print(colors.good + " Emails will be searched in the tweets of the hashtag #" + query + colors.end)
@@ -40,9 +40,6 @@ def getFollowings(username,limit):
     print(colors.good + " Getting followings of the user: " + username + colors.end)
     return Twitter.getFollowers(username,limit)
 
-
-
-
 def getEmailsFromTweets(tweets):
     results = []
 
@@ -53,8 +50,14 @@ def getEmailsFromTweets(tweets):
         if email:
             results.append(json.dumps({"user":user,"userID":userID,"email":email}))
             print(colors.good + " Username: " + colors.W + user + colors.B + " UserID: " + colors.W + userID + colors.B + " Email: " + colors.W + email + colors.end)
+            insertSocialPwnedTarget(email,{"user":user,"userID":userID,"email":email})
 
     return list(set(results))
+
+def insertSocialPwnedTarget(id_target,target_list):
+
+    if SocialPwned.updateTwitter(id_target,target_list) == False:
+        SocialPwned(id_target,linkedin = {},instagram = {},twitter = target_list,leaks = {"pwndb":[],"dehashed":[],"ghunt":{}})
 
 def findEmail(tweet):
     for word in tweet:

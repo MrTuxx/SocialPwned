@@ -42,6 +42,8 @@ def scrape(gaiaID, client, cookies, config, headers, regex_rev_by_id, is_headles
     base_url = f"https://www.google.com/maps/contrib/{gaiaID}/reviews?hl=en"
     print(colors.good + f" Google Maps : {base_url.replace('?hl=en', '')}" + colors.end)
 
+    reviews_url = base_url.replace('?hl=en', '')
+
     tmprinter.out(colors.info +" Initial request..." + colors.end)
 
     req = client.get(base_url)
@@ -128,7 +130,7 @@ def scrape(gaiaID, client, cookies, config, headers, regex_rev_by_id, is_headles
     tmprinter.clear()
     print(colors.good + f" Average rating : {int(rating_avg) if int(rating_avg) / round(rating_avg, 1) == 1 else round(rating_avg, 1)}/5 stars !" + colors.end)
     # 4.9 => 4.9, 5.0 => 5, we don't show the 0
-    return reviews
+    return {"reviews_url":reviews_url,"reviews":reviews}
 
 
 def avg_location(locs):

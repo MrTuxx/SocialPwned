@@ -11,6 +11,7 @@ from core import twitter
 from core import ghunt
 from core import output
 from core.colors import colors
+from core.socialpwned import SocialPwned
 
 def readCredentials(credentialsFile):
     try:
@@ -204,7 +205,7 @@ def dehashedParameters(args,dehashed_email,dehashed_apikey,results,out_dir):
         print(colors.bad + " No emails for Ghunt" + colors.end)
 
     if args.email_dh:
-        dehashed_results.append(DehashedAPI.dehashedSearch(dehashed_email,dehashed_apikey,email=args.email_dh))
+        dehashed_results.append(DehashedAPI.singleDehashedEmailSearch(dehashed_email,dehashed_apikey,email=args.email_dh))
 
     output.saveResultsDehashed(out_dir,dehashed_results)
 
@@ -261,3 +262,4 @@ def run(args):
             print(colors.good + " Using PwnDB!\n" + colors.end)
             pwndb_results = PwnDB.findLeak(results,args.tor_proxy)
             output.saveResultsPwnDB(out_dir,pwndb_results)
+    SocialPwned.create_json(out_dir)

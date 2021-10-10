@@ -4,6 +4,8 @@ import sys, json, time
 from core.colors import colors
 from lib.LinkedInAPI import Linkedin
 from lib.PwnDB import PwnDB
+from core.socialpwned import SocialPwned
+from core import output
 
 def getCompanyInformation(api,companyID):
 
@@ -33,8 +35,14 @@ def getEmailsFromUsers(api,employees):
         email = str(info.get("email"))
         twitter = str(info.get("twitter"))
         phone = str(info.get("phone"))
+        name = output.remove_accents(str(employee.get("name")))
         print(colors.good + " User ID: " + colors.W + userID + colors.B + " Public ID of employee: " + colors.W + employeeID + colors.B + " Email: " + colors.W + email + colors.B + " Phone: " + colors.W + phone + colors.B + " Twitter: " + colors.W + twitter + colors.end)
-
+        id_json = email
+        if email == "Not Found":
+            id_json = userID
+        
+        if SocialPwned.updateLinkedin(id_json,{"public_id": output.clean_name(employeeID),"urn_id": output.clean_name(userID),"email":email,"twitter":twitter,"phone":phone}) == False:
+            SocialPwned(id_json,output.clean_name(name),{"public_id":output.clean_name(employeeID),"urn_id":output.clean_name(userID),"email":email,"twitter":twitter,"phone":phone},instagram = {},twitter = {},leaks = {"pwndb":[],"dehashed":[],"ghunt":{}})
         if email != "Not Found":
             results.append(json.dumps({"user":employeeID,"userID":userID,"email":email}))
     return results
@@ -95,8 +103,14 @@ def getUserInformation(api,publicID):
     email = str(info.get("email"))
     twitter = str(info.get("twitter"))
     phone = str(info.get("phone"))
-    print(colors.good + " User: " + colors.W + publicID + colors.B + " Email: " + colors.W + email + colors.B + " Phone: " + colors.W + phone + colors.B + " Twitter: " + colors.W + twitter + colors.end)
-
+    print(colors.good + " User: " + colors.W + publicID + colors.B + " Email: " + colors.W + email + colors.B + " Phone: " + colors.W + phone + colors.B + " Twitter: " + colors.W + twitter + colors.end)   
+    
+    id_json = email
+    if email == "Not Found":
+        id_json = publicID    
+    
+    if SocialPwned.updateLinkedin(id_json,{"public_id": publicID,"urn_id": "","email":email,"twitter":twitter,"phone":phone}) == False:
+        SocialPwned(id_json,"",{"public_id":publicID,"urn_id": "","email":email,"twitter":twitter,"phone":phone},instagram = {},twitter = {},leaks = {"pwndb":[],"dehashed":[],"ghunt":{}})
     if email != "Not Found":
         results.append(json.dumps({"user":publicID,"userID":"Not-Found","email":email}))
     return results

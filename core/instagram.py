@@ -4,6 +4,7 @@ import sys, requests, argparse, json, re, os, time
 from core.colors import colors
 from lib.InstagramAPI import InstagramAPI
 from lib.PwnDB import PwnDB
+from core.socialpwned import SocialPwned
 
 def getEmailsFromListOfUsers(api,items):
     targets = []
@@ -46,14 +47,25 @@ def getEmailsFromUsers(users):
             if email != "None" and email !="":
                 targets.append(json.dumps({"user":username,"userID":userID,"email":email,"private":private}))
                 print(colors.good + " Username: " + colors.W + username + colors.B + " UserID: " + colors.W + userID + colors.B + " Email: " + colors.W + email + colors.B + " Followers: " + colors.W + followers + colors.B + " Following: " + colors.W + following + colors.end)
+                insertSocialPwnedTarget(email,{"user":username,"userID":userID,"email":email,"private":private,"followers":followers,"following":following})
             else:
                 result = searchEmailInBio(biography)
                 if result:
                     print(colors.info + " The email was found in the user's biography: " + result + colors.end)
                     print(colors.good + " Username: " + colors.W + username + colors.B + " UserID: " + colors.W + userID + colors.B + " Email: " + colors.W + result + colors.B + " Followers: " + colors.W + followers + colors.B + " Following: " + colors.W + following + colors.end)
                     targets.append(json.dumps({"user":username,"userID":userID,"email":result,"private":private}))
+                    insertSocialPwnedTarget(email,{"user":username,"userID":userID,"email":email,"private":private,"followers":followers,"following":following})
+                else:
+                    insertSocialPwnedTarget(userID,{"user":username,"userID":userID,"email":"Not Found","private":private,"followers":followers,"following":following})
+
+
 
     return list(set(targets))
+
+def insertSocialPwnedTarget(id_target,target_list):
+
+    if SocialPwned.updateInstagram(id_target,target_list) == False:
+        SocialPwned(id_target,linkedin = {},instagram = target_list,twitter = {},leaks = {"pwndb":[],"dehashed":[],"ghunt":{}})
 
 def searchEmailInBio(bio):
     

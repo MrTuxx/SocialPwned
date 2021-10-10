@@ -65,7 +65,7 @@ def fetch(email, client, config):
     except KeyError:
         return False
 
-    return {"status": "available", "events": events}
+    return {"status": "available", "events": events, "url_endpoint": url_endpoint}
 
 def out(events):
     limit = 5
