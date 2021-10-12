@@ -90,7 +90,7 @@ usage: socialpwned.py [-h] --credentials CREDENTIALS [--pwndb] [--tor-proxy PROX
                       [--email-dh email@gmail.com]
 ```
 
-## Output format
+## Output format :floppy_disk:
 
 Each time SocialPwned is run, a directory with the following format will be generated:
 
@@ -125,7 +125,7 @@ output
 - The emails directory contains a file with all the emails obtained.
 - The instagram directory contains a file with user accounts and their related email addresses.
 - The twitter directory contains a file with user accounts and their related email addresses.
-- The linkedin directory contains different files with combinations of user names obtained. Inspired by the [linkedin2usernames](https://github.com/initstring/linkedin2username) tool.
+- The linkedin directory contains different files with combinations of user names obtained. Inspired by the [linkedin2username](https://github.com/initstring/linkedin2username) tool.
 - The socialpwned.json file provides in JSON format all the information obtained by SocialPwned and its different modules. Where the ID of each item is the email, in case you have information about a user but not his email, the ID will be his unique social network identifier.
 
 ## Basic Examples and Combos 🚀
@@ -185,6 +185,21 @@ python3 socialpwned.py --credentials credentials.json --twitter --target-tw user
 ```
 ```
 python3 socialpwned.py --credentials credentials.json --twitter --target-tw username --all-tw --followers-tw --followings-tw --pwndb
+```
+
+### GHunt
+![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/4-1.png "GHunt Information")
+
+```
+
+```
+
+### Dehashed
+![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/5-1.png "Dehashed Leaks")
+
+```
+
+
 ```
 
 ### Combos
