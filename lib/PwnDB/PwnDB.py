@@ -106,7 +106,7 @@ def findLeak(emails,tor_proxy):
         except Exception as e:
             print(colors.bad + " Can't connect to service! restart tor service and try again." + colors.end)
             print(e)
-            sys.exit()
+            return leaks
         print(colors.info + " Searching: " + mail + colors.end)
         if response.status_code == 200:
             target = {'user': user, 'userID': userID, 'email': mail, 'leak': parsePwndbResponse(mail,response.text)}

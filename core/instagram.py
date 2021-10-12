@@ -70,8 +70,9 @@ def insertSocialPwnedTarget(id_target,target_list):
 def searchEmailInBio(bio):
     
     for word in bio:
-        if re.match('^[(a-z0-9\_\-\.)]+@[(a-z0-9\_\-\.)]+\.[(a-z)]{2,15}$',word):
-            return word
+        match = re.findall(r'[\w.+-]+@[\w-]+\.[\w.-]+',word)
+        if match:
+            return match[0]
 
 def checkUserVisibility(api,targetID):
     api.getUserFeed(targetID)
