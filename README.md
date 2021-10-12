@@ -25,13 +25,17 @@ SocialPwned uses different modules:
 
 ## Installation 🛠
 
+<!---
 ### Easy way
 
 ```
+$ git clone https://github.com/MrTuxx/SocialPwned.git
 $ service docker start
 $ docker pull mrtuxx/socialpwned
+$ docker run -v $(pwd):/socialpwned -it mrtuxx/socialpwned socialpwned.py --help
 ```
 >NOTE: You will need to have the docker service correctly installed.
+-->
 
 ### Manual way
 
@@ -187,6 +191,8 @@ python3 socialpwned.py --credentials credentials.json --twitter --target-tw user
 python3 socialpwned.py --credentials credentials.json --twitter --target-tw username --all-tw --followers-tw --followings-tw --pwndb
 ```
 
+<!---
+
 ### GHunt
 ![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/4-1.png "GHunt Information")
 
@@ -201,6 +207,9 @@ python3 socialpwned.py --credentials credentials.json --twitter --target-tw user
 
 
 ```
+
+
+--->
 
 ### Combos
 
@@ -217,6 +226,7 @@ python3 socialpwned.py --credentials credentials.json --instagram --target-ig us
 - [Linkedin API](https://github.com/tomquirk/linkedin-api). Author: tomquirk
 - [Twint](https://github.com/twintproject/twint). Author: twintproject
 - [PwnDB](https://github.com/davidtavarez/pwndb). Author: davidtavarez
+- [GHunt](https://github.com/mxrch/GHunt). Author: mxrch
 
 ## Disclaimer
 
