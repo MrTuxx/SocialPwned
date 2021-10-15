@@ -25,17 +25,16 @@ SocialPwned uses different modules:
 
 ## Installation 🛠
 
-<!---
+
 ### Easy way
 
 ```
-$ git clone https://github.com/MrTuxx/SocialPwned.git
 $ service docker start
 $ docker pull mrtuxx/socialpwned
-$ docker run -v $(pwd):/socialpwned -it mrtuxx/socialpwned socialpwned.py --help
+$ docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --help
 ```
 >NOTE: You will need to have the docker service correctly installed.
--->
+
 
 ### Manual way
 
@@ -92,6 +91,13 @@ usage: socialpwned.py [-h] --credentials CREDENTIALS [--pwndb] [--tor-proxy PROX
                       [--until DATE] [--profile-full] [--all-tw] [--target-tw USERNAME] [--hashtag-tw USERNAME]
                       [--followers-tw] [--followings-tw] [--ghunt] [--email-gh email@gmail.com] [--dehashed]
                       [--email-dh email@gmail.com]
+```
+
+If you do a pull of the docker image you should run:
+
+```
+docker run -v $(pwd)/<YOUR CREDENTIALS JSON FILE>:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json <COMMANDS>
+
 ```
 
 ## Output format :floppy_disk:
