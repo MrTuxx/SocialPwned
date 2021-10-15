@@ -202,7 +202,7 @@ def dehashedParameters(args,dehashed_email,dehashed_apikey,results,out_dir):
     if results != []:
         dehashed_results = DehashedAPI.dehashedRequest(dehashed_email,dehashed_apikey,results)
     else:
-        print(colors.bad + " No emails for Ghunt" + colors.end)
+        print(colors.bad + " No emails for Dehashed" + colors.end)
 
     if args.email_dh:
         dehashed_results.append(DehashedAPI.singleDehashedEmailSearch(dehashed_email,dehashed_apikey,email=args.email_dh))

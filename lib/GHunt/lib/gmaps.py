@@ -1,6 +1,9 @@
 import hashlib
 import re
 import time
+import logging
+import sys
+import warnings
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
@@ -14,6 +17,8 @@ from core.colors import colors
 
 from lib.GHunt.lib.utils import *
 
+logging.disable(sys.maxsize)
+warnings.filterwarnings("ignore")
 
 def scrape(gaiaID, client, cookies, config, headers, regex_rev_by_id, is_headless):
     def get_datetime(datepublished):

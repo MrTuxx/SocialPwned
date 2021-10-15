@@ -3,6 +3,8 @@
 import json
 import sys
 import os
+import logging
+import warnings
 from datetime import datetime
 from io import BytesIO
 from os.path import isfile
@@ -21,6 +23,9 @@ from lib.GHunt.lib.utils import *
 import lib.GHunt.lib.calendar as gcalendar
 from core.colors import colors
 from core import output
+
+logging.disable(sys.maxsize)
+warnings.filterwarnings("ignore")
 
 def email_hunt(email):
 

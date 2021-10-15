@@ -32,18 +32,18 @@ def get_saved_cookies():
         except Exception:
             print(colors.bad + " Stored cookies are corrupted" + colors.end)
             return False
-    print(colors.info + " No stored cookies found" + colors.info)
+    print(colors.info + " No stored cookies found" + colors.end)
     return False
 
 
 def get_authorization_source(cookies):
     ''' returns html source of hangouts page if user authorized '''
     req = httpx.get("https://docs.google.com/document/u/0/?usp=direct_url",
-                    cookies=cookies, headers=config.headers, allow_redirects=False)
+                    cookies=cookies, headers=config.headers)
 
     if req.status_code == 200:
         req2 = httpx.get("https://hangouts.google.com", cookies=cookies,
-                         headers=config.headers, allow_redirects=False)
+                         headers=config.headers)
         if "myaccount.google.com" in req2.text:
             return req.text
     return None
