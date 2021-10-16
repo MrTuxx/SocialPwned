@@ -1,8 +1,9 @@
 # SocialPwned
+<!---
 <p align="right">
   <a href=https://github.com/MrTuxx/SocialPwned/blob/master/docs/LEEME.md>Spanish🗨</a>
 </p>
-
+--->
 ![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/SocialPwned.PNG "SocialPwned Welcome")
 
 [![Python 3.8](https://img.shields.io/badge/Python-3.8-blue.svg)](https://www.python.org/download/releases/3.0/) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/MrTuxx/SocialPwned/blob/master/LICENSE) 
@@ -97,8 +98,16 @@ If you do a pull of the docker image you should run:
 
 ```
 docker run -v $(pwd)/<YOUR CREDENTIALS JSON FILE>:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json <COMMANDS>
-
 ```
+### Tips :pushpin:
+
+1. Keep Linkedin and Instagram sessions in a browser to resolve possible blocks. Interact in a normal way.
+
+2. Before trying to get all the emails of an organization's employees on Linkedin make sure you have a wide network of contacts, friends in common and some employees added to your network. Many times you can't see a contact's information if they are not in your network.
+
+3. Try not to perform massive searches to avoid being blocked.
+
+4. Combine the modules when it is a specific target or will not handle a large amount of information, otherwise it may fail or you will be blocked.
 
 ## Output format :floppy_disk:
 
@@ -147,19 +156,19 @@ Here are some examples:
 ![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/1-1.png "Users with email in Instagram")
 ![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/1-2.png "Leaks Found")
 ```
-python3 socialpwned.py --credentials credentials.json --instagram --info España
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --instagram --info España
 ```
 ```
-python3 socialpwned.py --credentials credentials.json --instagram --location 832578276
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --instagram --location 832578276
 ```
 ```
-python3 socialpwned.py --credentials credentials.json --instagram --hashtag-ig someHashtag --pwndb
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --instagram --hashtag-ig someHashtag --pwndb
 ```
 ```
-python3 socialpwned.py --credentials credentials.json --instagram --target-ig username --pwndb
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --instagram --target-ig username --pwndb
 ```
 ```
-python3 socialpwned.py --credentials credentials.json --instagram --target-ig username --followers-ig --followings-ig --pwndb
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --instagram --target-ig username --followers-ig --followings-ig --pwndb
 ```
 
 ### Linkedin
@@ -168,66 +177,62 @@ python3 socialpwned.py --credentials credentials.json --instagram --target-ig us
 ![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/2-2.png "Searching employees of a company in Linkedin")
 ![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/2-3.png "Leaks Found")
 ```
-python3 socialpwned.py --credentials credentials.json --linkedin --search-companies "My Target"
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --linkedin --search-companies "My Target"
 ```
 ```
-python3 socialpwned.py --credentials credentials.json --linkedin --search-companies "My Target" --employees --pwndb
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --linkedin --search-companies "My Target" --employees --pwndb
 ```
 ```
-python3 socialpwned.py --credentials credentials.json --linkedin --company 123456789 --employees --pwndb
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --linkedin --company 123456789 --employees --pwndb
 ```
 ```
-python3 socialpwned.py --credentials credentials.json --linkedin --company 123456789 --employees --add-contacts
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --linkedin --company 123456789 --employees --add-contacts
 ```
 ```
-python3 socialpwned.py --credentials credentials.json --linkedin --user-contacts user-id --pwndb
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --linkedin --user-contacts user-id --pwndb
 ```
 ```
-python3 socialpwned.py --credentials credentials.json --linkedin --user-contacts user-id --add-contacts
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --linkedin --user-contacts user-id --add-contacts
 ```
 ### Twitter
 ![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/3-1.png "Searching in Twitter")
 
 ```
-python3 socialpwned.py --credentials credentials.json --twitter --hashtag-tw someHashtag --pwndb --limit 200
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --twitter --hashtag-tw someHashtag --pwndb --limit 200 --dehashed
 ```
 ```
-python3 socialpwned.py --credentials credentials.json --twitter --target-tw username --all-tw --pwndb
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --twitter --target-tw username --all-tw --pwndb --dehashed --ghunt
 ```
 ```
-python3 socialpwned.py --credentials credentials.json --twitter --target-tw username --all-tw --followers-tw --followings-tw --pwndb
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --twitter --target-tw username --all-tw --followers-tw --followings-tw --pwndb
 ```
-
-
 
 ### GHunt
 ![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/4-1.png "GHunt Information")
 
 ```
-
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --ghunt --email-gh "email@example.com"
 ```
+>NOTE: Whenever you add the --ghunt flag this module will be executed. If you do it in a bulk search it may fail due to the amount of requests.
 
 ### Dehashed
 ![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/5-1.png "Dehashed Leaks")
 
 ```
-
-
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --dehashed --email-dh "email@example.com"
 ```
-
-
-
+>NOTE: Adding the --dehashed flag at the end of each search will make an API request for each email. 
 
 ### Combos
 
 ```
-python3 socialpwned.py --credentials credentials.json --instagram --target-ig username --followers-ig --followings-ig --linkedin --company 123456789 --employees --twitter --target-tw username --all-tw --pwndb --output results.txt
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --instagram --target-ig username --followers-ig --followings-ig --linkedin --company 123456789 --employees --twitter --target-tw username --all-tw --pwndb --ghunt --dehashed
 ```
 ```
-python3 socialpwned.py --credentials credentials.json --instagram --target-ig username --linkedin --target-in username --twitter --target-tw username --all-tw --pwndb
+docker run -v $(pwd)/credentials.json:/socialpwned/credentials.json -v $(pwd)/output:/socialpwned/output -it mrtuxx/socialpwned socialpwned.py --credentials credentials.json --instagram --target-ig username --linkedin --target-in username --twitter --target-tw username --all-tw --pwndb --ghunt --dehashed
 ```
 
-## References
+## References :books:
 
 - [Instagram API](https://github.com/LevPasha/Instagram-API-python). Author: LevPasha
 - [Linkedin API](https://github.com/tomquirk/linkedin-api). Author: tomquirk
@@ -235,7 +240,7 @@ python3 socialpwned.py --credentials credentials.json --instagram --target-ig us
 - [PwnDB](https://github.com/davidtavarez/pwndb). Author: davidtavarez
 - [GHunt](https://github.com/mxrch/GHunt). Author: mxrch
 
-## Disclaimer
+## Disclaimer :warning:
 
 The usage of SocialPwned to attack targets without prior mutual consent is illegal. In addition, it makes use of different modules that violate Linkedin and Instagram rules, therefore, you will be banned temporarily or permanently.
 
