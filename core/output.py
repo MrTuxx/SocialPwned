@@ -144,7 +144,7 @@ def saveResultsPwnDB(out_dir,results):
                     socialpwned_json.append(json.loads(infoPwned))
                 if SocialPwned.updateLeaksPwnDB(result.get("email"),socialpwned_json) == False:
                     # This case should never occur, because if we have email, we have id
-                    SocialPwned(email,name = "",linkedin = {},instagram = {},twitter = {},leaks = {"pwndb":socialpwned_json,"dehashed":[],"ghunt":{}})
+                    SocialPwned(result.get("email"),name = "",linkedin = {},instagram = {},twitter = {},leaks = {"pwndb":socialpwned_json,"dehashed":[],"ghunt":{}})
             else:
                 print(colors.good + " User: " + colors.W + result.get("user") + colors.B + " Email: " + colors.W + result.get("email") + colors.B + " Not Have Leaks in PwnDB" + colors.end)   
     resultFile.close()
