@@ -144,8 +144,8 @@ Here are some examples:
 
 ### Instagram
 
-![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/1-3.png "Users with email in Instagram")
-![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/1-4.png "Leaks Found")
+![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/1-1.png "Users with email in Instagram")
+![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/1-2.png "Leaks Found")
 ```
 python3 socialpwned.py --credentials credentials.json --instagram --info España
 ```
@@ -164,8 +164,9 @@ python3 socialpwned.py --credentials credentials.json --instagram --target-ig us
 
 ### Linkedin
 
+![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/2-1.png "Searching company in Linkedin")
 ![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/2-2.png "Searching employees of a company in Linkedin")
-![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/2-4.png "Leaks Found")
+![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/2-3.png "Leaks Found")
 ```
 python3 socialpwned.py --credentials credentials.json --linkedin --search-companies "My Target"
 ```
@@ -197,7 +198,7 @@ python3 socialpwned.py --credentials credentials.json --twitter --target-tw user
 python3 socialpwned.py --credentials credentials.json --twitter --target-tw username --all-tw --followers-tw --followings-tw --pwndb
 ```
 
-<!---
+
 
 ### GHunt
 ![SocialPwned](https://github.com/MrTuxx/SocialPwned/blob/master/docs/images/4-1.png "GHunt Information")
@@ -215,7 +216,7 @@ python3 socialpwned.py --credentials credentials.json --twitter --target-tw user
 ```
 
 
---->
+
 
 ### Combos
 
