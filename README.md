@@ -49,7 +49,9 @@ Clone the repository using **Git**:
 ```
 $ git clone https://github.com/MrTuxx/SocialPwned.git
 $ cd SocialPwned
-$ pip3 install -r requirements.txt
+$ sudo pip3 install --user --upgrade git+https://github.com/twintproject/twint.git@origin/master#egg=twint
+$ sudo pip3 install -r requirements.txt
+$ sudo python3 socialpwned.py --credentials credentials.json --help
 ```
 For the GHunt module to work correctly you must follow these steps:
 
