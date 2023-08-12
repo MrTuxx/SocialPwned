@@ -2,4 +2,4 @@
 
 service tor start
 
-/usr/bin/python3 "$@"
+python3 "$@"
