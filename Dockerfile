@@ -169,7 +169,7 @@ RUN set -eux; \
 	pip --version
 
 RUN apt-get update && \
-    apt-get install -y net-tools git tor curl unzip
+    apt-get install -y net-tools git tor curl unzip gnupg
 
 WORKDIR /socialpwned
 COPY . /socialpwned
