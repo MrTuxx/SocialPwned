@@ -25,22 +25,6 @@ SocialPwned uses different modules:
 - **Dehashed**: Provides clear passwords and also the hash of passwords that could not be cracked. It is necessary to pay at [Dehashed](https://dehashed.com/) to get an API Key, but it can be a good alternative when PwnDB is slow or does not provide results.
 - **GHunt**: Using the tool created by @mxrch, [GHunt](https://github.com/mxrch/GHunt), it is possible to obtain information related to Google mails, e.g. reviews, profile picture, possible location or public calendar events.
 
-## Sponsor
-<a href="https://nubela.co/proxycurl?utm_campaign=influencer_marketing&utm_source=github&utm_medium=social&utm_content=mrtuxx_francisco_montiel_gonzales_socialpwned">
-<img src="https://github.com/josephlimtech/linkedin-profile-scraper-api/blob/master/Proxycurl_scrape_LinkedIn.png" width="350px" height="100%" alt="Proxycurl APIs enrich people and company profiles with structured data" />
-</a><br><br/>
-
-Scrape public LinkedIn profile data at scale with [Proxycurl APIs](https://nubela.co/proxycurl?utm_campaign=influencer_marketing&utm_source=github&utm_medium=social&utm_content=mrtuxx_francisco_montiel_gonzales_socialpwned).
-
-• Scraping Public profiles are battle tested in court in HiQ VS LinkedIn case.<br/>
-• GDPR, CCPA, SOC2 compliant<br/>
-• High rate limit - 300 requests/minute<br/>
-• Fast - APIs respond in ~2s<br/>
-• Fresh data - 88% of data is scraped real-time, other 12% are not older than 29 days<br/>
-• High accuracy<br/>
-• Tons of data points returned per profile
-
-Built for developers, by developers.
 
 ## Installation 🛠
 
